@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI for Task Management — Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bp-navy: #0f2a4a;
+    --bp-blue: #1a6fa8;
+    --bp-sky: #3fa0d0;
+    --bp-light: #e8f4fb;
+    --bp-pale: #f4f9fd;
+    --bp-accent: #00b4d8;
+    --bp-warm: #f0f6ff;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-muted: #9ca3af;
+    --border: #e2ecf5;
+    --white: #ffffff;
+    --shadow-sm: 0 1px 3px rgba(15,42,74,0.06), 0 1px 2px rgba(15,42,74,0.04);
+    --shadow-md: 0 4px 16px rgba(15,42,74,0.08), 0 2px 6px rgba(15,42,74,0.05);
+    --shadow-lg: 0 12px 40px rgba(15,42,74,0.12);
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bp-pale);
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, var(--bp-navy) 0%, #1a3d6e 60%, var(--bp-blue) 100%);
+    padding: 48px 0 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(63,160,208,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 10%;
+    width: 400px; height: 200px;
+    background: radial-gradient(ellipse, rgba(0,180,216,0.1) 0%, transparent 70%);
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .logo-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+  .logo-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 40px;
+    padding: 8px 18px 8px 10px;
+  }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 20px; height: 20px; }
+  .logo-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .series-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--bp-accent);
+    background: rgba(0,180,216,0.15);
+    border: 1px solid rgba(0,180,216,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .header-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav-link:hover { color: var(--bp-blue); }
+  .nav-link.active { color: var(--bp-blue); border-bottom-color: var(--bp-blue); }
+  .nav-num {
+    width: 20px; height: 20px;
+    background: var(--bp-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bp-blue);
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  /* ── SECTION ── */
+  section { scroll-margin-top: 60px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--bp-blue), var(--bp-sky));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(26,111,168,0.3);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--bp-navy);
+  }
+  .section-desc {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* ── PROMPT GRID ── */
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+  }
+  .prompt-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .prompt-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--bp-blue), var(--bp-accent));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .prompt-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .prompt-card:hover::before { opacity: 1; }
+  .prompt-num-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bp-blue);
+    background: var(--bp-light);
+    border-radius: 20px;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .prompt-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bp-navy);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .prompt-body {
+    background: var(--bp-pale);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    font-family: 'DM Sans', sans-serif;
+    position: relative;
+  }
+  .prompt-body strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .prompt-body .placeholder {
+    color: var(--bp-sky);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .prompt-body ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 6px;
+  }
+  .prompt-body ul li {
+    padding: 2px 0 2px 16px;
+    position: relative;
+  }
+  .prompt-body ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--bp-accent);
+    font-size: 11px;
+    top: 4px;
+  }
+  .copy-btn {
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--bp-blue);
+    background: none;
+    border: 1px solid var(--bp-light);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { background: var(--bp-light); border-color: var(--bp-sky); }
+  .copy-btn.copied { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; }
+
+  /* ── WHEN TO USE ── */
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .criteria-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+  }
+  .criteria-card:hover { box-shadow: var(--shadow-md); }
+  .criteria-card.negative {
+    background: #fff8f8;
+    border-color: #fcd5d5;
+  }
+  .criteria-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+    background: var(--bp-light);
+  }
+  .criteria-card.negative .criteria-icon { background: #fef2f2; }
+  .criteria-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--bp-navy);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .criteria-sub {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--bp-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+  .criteria-card.negative .criteria-sub { color: #dc2626; }
+  .criteria-body {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .criteria-body ul {
+    list-style: none;
+    padding: 0;
+  }
+  .criteria-body ul li {
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  .criteria-body ul li::before {
+    content: '✓';
+    position: absolute; left: 0;
+    color: #22c55e;
+    font-size: 12px;
+    font-weight: 700;
+    top: 4px;
+  }
+  .criteria-card.negative .criteria-body ul li::before {
+    content: '✕';
+    color: #ef4444;
+  }
+  .criteria-note {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── GUT CHECK ── */
+  .gut-check {
+    background: linear-gradient(135deg, var(--bp-navy) 0%, #1a3d6e 100%);
+    border-radius: var(--radius);
+    padding: 36px;
+    color: var(--white);
+    margin-top: 24px;
+  }
+  .gut-check h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: var(--white);
+  }
+  .gut-check p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 24px;
+  }
+  .gut-check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .gut-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .gut-yes {
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #4ade80;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .gut-q {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+  }
+
+  /* ── TASKMASTER ── */
+  .taskmaster-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 640px) { .taskmaster-wrapper { grid-template-columns: 1fr; } }
+  .tm-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .tm-card.full-width {
+    grid-column: 1 / -1;
+  }
+  .tm-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bp-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tm-card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .tm-body {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .tm-body ul {
+    list-style: none;
+    padding: 0;
+  }
+  .tm-body ul li {
+    padding: 3px 0 3px 18px;
+    position: relative;
+  }
+  .tm-body ul li::before {
+    content: '·';
+    position: absolute; left: 4px;
+    color: var(--bp-sky);
+    font-size: 18px;
+    line-height: 1;
+    top: 3px;
+  }
+  .tm-body .label {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .bucket-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .bucket-item {
+    background: var(--bp-pale);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--bp-navy);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .bucket-num {
+    width: 22px; height: 22px;
+    background: var(--bp-blue);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .cmd-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .cmd-chip {
+    background: var(--bp-light);
+    border: 1px solid rgba(26,111,168,0.15);
+    color: var(--bp-navy);
+    font-size: 12.5px;
+    font-family: 'DM Sans', monospace;
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+  .taskmaster-prompt-box {
+    background: var(--bp-navy);
+    border-radius: var(--radius);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .taskmaster-prompt-box::before {
+    content: '"';
+    position: absolute;
+    top: -20px; right: 20px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 160px;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+  }
+  .taskmaster-prompt-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .taskmaster-prompt-box .subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
+  }
+  .prompt-text-block {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    font-family: 'DM Sans', sans-serif;
+    max-height: 320px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+  }
+  .copy-prompt-btn {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bp-accent);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .copy-prompt-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .copy-prompt-btn.copied { background: #16a34a; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bp-navy);
+    padding: 32px;
+    text-align: center;
+  }
+  .footer-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .footer-brand {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+  }
+  .footer-brand strong { color: rgba(255,255,255,0.8); }
+  .footer-series {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  @media (max-width: 640px) {
+    .prompt-grid { grid-template-columns: 1fr; }
+    .criteria-grid { grid-template-columns: 1fr; }
+    main { padding: 32px 20px 60px; }
+    .header-inner { padding: 0 20px; }
+    .nav-inner { padding: 0 20px; }
+    .gut-check-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-row">
+      <div class="logo-badge">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
+            <rect x="13" y="3" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
+            <rect x="3" y="13" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
+            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#3fa0d0"/>
+          </svg>
+        </div>
+        <span class="logo-text">Blueprint</span>
+      </div>
+      <span class="series-tag">AI Learning Series</span>
+    </div>
+    <h1 class="header-title">AI for Task Management</h1>
+    <p class="header-subtitle">Moving from paper lists to AI-powered workflows without losing what made simple systems work</p>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <a href="#prompt-templates" class="nav-link active">
+      <span class="nav-num">10</span> Prompt Templates
+    </a>
+    <a href="#when-to-use" class="nav-link">
+      <span class="nav-num">✓</span> When to Use AI
+    </a>
+    <a href="#taskmaster" class="nav-link">
+      <span class="nav-num">★</span> Taskmaster Prompt
+    </a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── SECTION 1: PROMPT TEMPLATES ── -->
+  <section id="prompt-templates">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <h2 class="section-title">Prompt Templates</h2>
+        <p class="section-desc">10 ready-to-use prompts for AI-assisted task and project management</p>
+      </div>
+    </div>
+
+    <div class="prompt-grid">
+
+      <!-- 1 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 1</div>
+        <div class="prompt-title">Weekly Focus Planning</div>
+        <div class="prompt-body">
+          <strong>Given the following tasks and priorities:</strong>
+          <span class="placeholder">[paste list]</span>
+          <strong style="margin-top:10px;">Help me:</strong>
+          <ul>
+            <li>Identify the top 3–5 focus items for this week</li>
+            <li>Explain briefly why each one matters now</li>
+            <li>Suggest what can safely wait</li>
+          </ul>
+          <p style="margin-top:10px; font-style:italic; color:#9ca3af; font-size:12.5px;">Do not assign deadlines — just help with focus and sequencing.</p>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Given the following tasks and priorities:\n[paste list]\n\nHelp me:\n- Identify the top 3–5 focus items for this week\n- Explain briefly why each one matters now\n- Suggest what can safely wait\n\nDo not assign deadlines—just help with focus and sequencing.`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 2 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 2</div>
+        <div class="prompt-title">Weekly Reflection &amp; Adjustment <span style="font-weight:400; color:#9ca3af;">(end-of or midweek)</span></div>
+        <div class="prompt-body">
+          <strong>Here's what I planned to work on this week:</strong>
+          <span class="placeholder">[paste plan]</span>
+          <strong style="margin-top:10px;">And here's what actually happened:</strong>
+          <span class="placeholder">[paste notes or updates]</span>
+          <strong style="margin-top:10px;">Help me:</strong>
+          <ul>
+            <li>Identify what slipped and why</li>
+            <li>Adjust priorities for next week</li>
+            <li>Capture any follow-ups or unresolved tasks</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Here's what I planned to work on this week:\n[paste plan]\n\nAnd here's what actually happened:\n[paste notes or updates]\n\nHelp me:\n- Identify what slipped and why\n- Adjust priorities for next week\n- Capture any follow-ups or unresolved tasks`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 3 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 3</div>
+        <div class="prompt-title">High-Level Project Decomposition</div>
+        <div class="prompt-body">
+          <strong>I'm starting a new project described below:</strong>
+          <span class="placeholder">[paste description]</span>
+          <strong style="margin-top:10px;">Please:</strong>
+          <ul>
+            <li>Break this into logical phases or milestones</li>
+            <li>For each phase, list specific, actionable tasks</li>
+            <li>Flag dependencies or sequencing where relevant</li>
+            <li>Keep tasks small enough to be completed in 1–3 days</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `I'm starting a new project described below:\n[paste description]\n\nPlease:\n- Break this into logical phases or milestones\n- For each phase, list specific, actionable tasks\n- Flag dependencies or sequencing where relevant\n- Keep tasks small enough to be completed in 1–3 days`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 4 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 4</div>
+        <div class="prompt-title">From Priority to Plan</div>
+        <div class="prompt-body">
+          <strong>This is currently listed as a priority:</strong>
+          <span class="placeholder">[paste priority]</span>
+          <strong style="margin-top:10px;">Turn this into:</strong>
+          <ul>
+            <li>A clear goal statement</li>
+            <li>A list of concrete next steps</li>
+            <li>Any assumptions or open questions I should resolve</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `This is currently listed as a priority:\n[paste priority]\n\nTurn this into:\n- A clear goal statement\n- A list of concrete next steps\n- Any assumptions or open questions I should resolve`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 4b: Project Setup -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 4B</div>
+        <div class="prompt-title">Project Setup for Task Tools</div>
+        <div class="prompt-body">
+          <strong>Take the following project plan:</strong>
+          <span class="placeholder">[paste plan]</span>
+          <strong style="margin-top:10px;">Convert it into:</strong>
+          <ul>
+            <li>Task titles</li>
+            <li>Task descriptions</li>
+            <li>Suggested subtasks</li>
+          </ul>
+          <p style="margin-top:10px; font-style:italic; color:#9ca3af; font-size:12.5px;">Format the output so it can be easily imported into a task management tool (Asana board or other).</p>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Take the following project plan:\n[paste plan]\n\nConvert it into:\n- Task titles\n- Task descriptions\n- Suggested subtasks\n\nFormat the output so it can be easily imported into a task management tool (Asana board or other).`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 5 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 5</div>
+        <div class="prompt-title">Make Tasks Actionable</div>
+        <div class="prompt-body">
+          <strong>Rewrite the following tasks so they are:</strong>
+          <ul>
+            <li>Clear</li>
+            <li>Actionable</li>
+            <li>Testable (it's obvious when they're done)</li>
+          </ul>
+          <strong style="margin-top:10px;">Here are the tasks:</strong>
+          <span class="placeholder">[paste tasks]</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Rewrite the following tasks so they are:\n- Clear\n- Actionable\n- Testable (it's obvious when they're done)\n\nHere are the tasks:\n[paste tasks]`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 6 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 6</div>
+        <div class="prompt-title">Clarify Ownership &amp; Scope</div>
+        <div class="prompt-body">
+          <strong>Review the tasks below and:</strong>
+          <ul>
+            <li>Clarify what is actually being asked</li>
+            <li>Identify where scope might be unclear or too broad</li>
+            <li>Suggest a cleaner version of each task</li>
+          </ul>
+          <span class="placeholder">[paste tasks]</span>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Review the tasks below and:\n- Clarify what is actually being asked\n- Identify where scope might be unclear or too broad\n- Suggest a cleaner version of each task\n\n[paste tasks]`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 7 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 7</div>
+        <div class="prompt-title">Simplify Overcomplicated Tasks</div>
+        <div class="prompt-body">
+          <strong>These tasks feel more complex than necessary:</strong>
+          <span class="placeholder">[paste tasks]</span>
+          <strong style="margin-top:10px;">Help me:</strong>
+          <ul>
+            <li>Simplify them where possible</li>
+            <li>Split overly large tasks into smaller steps</li>
+            <li>Remove unnecessary complexity or redundancy</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `These tasks feel more complex than necessary:\n[paste tasks]\n\nHelp me:\n- Simplify them where possible\n- Split overly large tasks into smaller steps\n- Remove unnecessary complexity or redundancy`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 8 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 8</div>
+        <div class="prompt-title">Impact vs. Urgency Prioritization</div>
+        <div class="prompt-body">
+          <strong>Here's my current task list:</strong>
+          <span class="placeholder">[paste list]</span>
+          <strong style="margin-top:10px;">Please:</strong>
+          <ul>
+            <li>Categorize tasks by high / medium / low impact</li>
+            <li>Categorize tasks by urgent / not urgent</li>
+            <li>Recommend a sensible order of execution</li>
+            <li>Explain your reasoning briefly for the top priorities</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Here's my current task list:\n[paste list]\n\nPlease:\n- Categorize tasks by high/medium/low impact\n- Categorize tasks by urgent/not urgent\n- Recommend a sensible order of execution\n- Explain your reasoning briefly for the top priorities`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 9 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 9</div>
+        <div class="prompt-title">What Should I Work On Today?</div>
+        <div class="prompt-body">
+          <strong>Based on the following tasks and context:</strong>
+          <span class="placeholder">[paste list]</span>
+          <strong style="margin-top:10px;">Help me:</strong>
+          <ul>
+            <li>Identify the best 1–3 tasks to focus on today</li>
+            <li>Explain why these are good choices</li>
+            <li>Suggest what I should avoid starting today</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Based on the following tasks and context:\n[paste list]\n\nHelp me:\n- Identify the best 1–3 tasks to focus on today\n- Explain why these are good choices\n- Suggest what I should avoid starting today`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <!-- 10 -->
+      <div class="prompt-card">
+        <div class="prompt-num-badge">Prompt 10</div>
+        <div class="prompt-title">De-Prioritization Check</div>
+        <div class="prompt-body">
+          <strong>Here's everything on my task list:</strong>
+          <span class="placeholder">[paste list]</span>
+          <strong style="margin-top:10px;">Help me identify:</strong>
+          <ul>
+            <li>Tasks that can be deprioritized or deferred</li>
+            <li>Tasks that may no longer be necessary</li>
+            <li>Anything that looks like "busy work" rather than meaningful progress</li>
+          </ul>
+        </div>
+        <button class="copy-btn" onclick="copyPrompt(this, `Here's everything on my task list:\n[paste list]\n\nHelp me identify:\n- Tasks that can be deprioritized or deferred\n- Tasks that may no longer be necessary\n- Anything that looks like \"busy work\" rather than meaningful progress`)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: WHEN TO USE ── -->
+  <section id="when-to-use">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <h2 class="section-title">When to Use AI for Tasks</h2>
+        <p class="section-desc">Use AI for task management when <strong>most of the following are true</strong></p>
+      </div>
+    </div>
+
+    <div class="criteria-grid">
+
+      <div class="criteria-card">
+        <div class="criteria-icon">🧠</div>
+        <div class="criteria-card-title">The Work Is About Thinking, Not Executing</div>
+        <div class="criteria-sub">AI is a good fit if you need help with:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>Clarifying what the task actually is</li>
+            <li>Turning notes or ideas into structured tasks</li>
+            <li>Breaking big projects into manageable steps</li>
+            <li>Identifying what matters most right now</li>
+          </ul>
+          <p class="criteria-note">If the work is already crystal clear and just needs doing, AI may add friction instead of removing it.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">🔁</div>
+        <div class="criteria-card-title">The Task Involves Repetition or Pattern Recognition</div>
+        <div class="criteria-sub">AI shines when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>You've done something like this before</li>
+            <li>The structure is familiar</li>
+            <li>The rules are mostly stable</li>
+            <li>You're reformatting, rewriting, or reorganizing similar work</li>
+          </ul>
+          <p class="criteria-note">If every instance is genuinely unique, AI may not help much.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">😵</div>
+        <div class="criteria-card-title">You're Paying a "Decision Tax"</div>
+        <div class="criteria-sub">Use AI when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>Your list feels overwhelming</li>
+            <li>Everything feels urgent</li>
+            <li>You're stuck deciding where to start</li>
+            <li>You're revisiting the same prioritization questions repeatedly</li>
+          </ul>
+          <p class="criteria-note">AI can't make decisions for you — but it can reduce decision fatigue.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">⚖️</div>
+        <div class="criteria-card-title">The Stakes Are Manageable</div>
+        <div class="criteria-sub">AI is appropriate when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>A small mistake is easy to fix</li>
+            <li>You can review outputs quickly</li>
+            <li>You remain accountable for the final result</li>
+          </ul>
+          <div class="criteria-sub" style="color:#dc2626;">Avoid using AI to set:</div>
+          <ul>
+            <li>Commitments that affect other people's time</li>
+            <li>Deadlines with real consequences</li>
+            <li>High-stakes decisions without human review</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">⚙️</div>
+        <div class="criteria-card-title">The System Already Mostly Works</div>
+        <div class="criteria-sub">AI works best when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>You already have a task system you like</li>
+            <li>One part of it feels annoying or tedious</li>
+            <li>You want to remove friction — not reinvent everything</li>
+          </ul>
+          <p class="criteria-note">If you don't have any system, AI won't magically create one you'll stick to.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">🕐</div>
+        <div class="criteria-card-title">You Need Continuity Over Time</div>
+        <div class="criteria-sub">AI is especially useful when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>Tasks span multiple weeks</li>
+            <li>Context matters</li>
+            <li>Notes, urgency, and history are important</li>
+            <li>You're tired of re-explaining things to yourself</li>
+          </ul>
+          <p class="criteria-note">Persistent AI threads or Custom GPTs are ideal here.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">🎯</div>
+        <div class="criteria-card-title">You Want Help Before the Tool</div>
+        <div class="criteria-sub">Use AI before:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>Creating tasks in Asana</li>
+            <li>Assigning work to others</li>
+            <li>Locking in deadlines</li>
+            <li>Finalizing priorities</li>
+          </ul>
+          <p class="criteria-note">Think of AI as the staging area where tasks get shaped before they become commitments.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card">
+        <div class="criteria-icon">🔄</div>
+        <div class="criteria-card-title">You're Willing to Iterate</div>
+        <div class="criteria-sub">AI works best if you're open to:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>Refining prompts</li>
+            <li>Adjusting structure</li>
+            <li>Correcting misunderstandings</li>
+            <li>Treating outputs as drafts, not answers</li>
+          </ul>
+          <p class="criteria-note">If you expect perfection on the first try, frustration is guaranteed.</p>
+        </div>
+      </div>
+
+      <div class="criteria-card negative">
+        <div class="criteria-icon">🚫</div>
+        <div class="criteria-card-title">When NOT to Use AI for Task Management</div>
+        <div class="criteria-sub">Pause or avoid AI when:</div>
+        <div class="criteria-body">
+          <ul>
+            <li>You're making commitments on behalf of others</li>
+            <li>The work requires sensitive judgment or nuance</li>
+            <li>The task changes dramatically every time</li>
+            <li>You're using AI to avoid a necessary conversation</li>
+            <li>You're delegating accountability instead of thinking</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gut-check">
+      <h3>Quick Yes / No Gut Check</h3>
+      <p>Before using AI, ask yourself — if you're answering yes to most of these, you're in good shape.</p>
+      <div class="gut-check-grid">
+        <div class="gut-item">
+          <span class="gut-yes">YES</span>
+          <span class="gut-q">"Am I trying to think more clearly?"</span>
+        </div>
+        <div class="gut-item">
+          <span class="gut-yes">YES</span>
+          <span class="gut-q">"Have I done something like this before?"</span>
+        </div>
+        <div class="gut-item">
+          <span class="gut-yes">YES</span>
+          <span class="gut-q">"Would it help to see a structured draft?"</span>
+        </div>
+        <div class="gut-item">
+          <span class="gut-yes">YES</span>
+          <span class="gut-q">"Will I review the output myself?"</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: TASKMASTER PROMPT ── -->
+  <section id="taskmaster">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <h2 class="section-title">Lauren's Taskmaster Master Prompt</h2>
+        <p class="section-desc">Copy and paste this into a new chat to spin up a persistent AI task manager</p>
+      </div>
+    </div>
+
+    <div class="taskmaster-wrapper">
+
+      <div class="tm-card">
+        <div class="tm-card-title">What It Does</div>
+        <div class="tm-body">
+          <p>This prompt turns a fresh AI chat into a dedicated task and project manager. It maintains a running list across sessions — no external tool required.</p>
+          <br>
+          <p>It tracks:</p>
+          <ul>
+            <li>Weekly recurring tasks</li>
+            <li>Active projects</li>
+            <li>Items monitoring or awaiting feedback</li>
+            <li>A priority stack for major initiatives</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tm-card">
+        <div class="tm-card-title">Status Buckets</div>
+        <div class="tm-body">
+          <div class="bucket-grid">
+            <div class="bucket-item"><span class="bucket-num">1</span>Weekly Recurring</div>
+            <div class="bucket-item"><span class="bucket-num">2</span>Monitoring</div>
+            <div class="bucket-item"><span class="bucket-num">3</span>Waiting / Feedback</div>
+            <div class="bucket-item"><span class="bucket-num">4</span>Current</div>
+            <div class="bucket-item"><span class="bucket-num">5</span>Priority Stack</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tm-card">
+        <div class="tm-card-title">Commands It Understands</div>
+        <div class="tm-body">
+          <div class="cmd-grid">
+            <span class="cmd-chip">add ___</span>
+            <span class="cmd-chip">mark ___ complete</span>
+            <span class="cmd-chip">move ___ to monitoring</span>
+            <span class="cmd-chip">update notes for ___</span>
+            <span class="cmd-chip">remove ___</span>
+            <span class="cmd-chip">reset for the new week</span>
+            <span class="cmd-chip">show me my list</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tm-card">
+        <div class="tm-card-title">Core Rules</div>
+        <div class="tm-body">
+          <ul>
+            <li>Always show the full active list after every update</li>
+            <li>Never show archived/completed tasks unless asked</li>
+            <li>New tasks go to the bottom of their section</li>
+            <li>Never reorder tasks unless explicitly asked</li>
+            <li>Weekly tasks reset to "Not Started" each week</li>
+            <li>Priority stack order never changes without explicit instruction</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="taskmaster-prompt-box" style="margin-top:20px;">
+      <h3>The Full Prompt</h3>
+      <p class="subtitle">Copy everything below and paste it into a new Claude chat to get started</p>
+      <div class="prompt-text-block" id="taskmaster-full">You are my task and project list manager.
+
+I maintain an ongoing list of:
+• Weekly recurring tasks
+• Active projects
+• Items that are monitoring or awaiting feedback
+• A priority stack for major initiatives
+• This list lives inside this chat, not in an external tool.
+
+Core rules
+• Always show the full active list after every update.
+• Do NOT show archived/completed tasks unless I explicitly ask.
+• New tasks must always be added to the bottom of their section.
+• Never reorder existing tasks unless I explicitly ask.
+• Keep section names exactly as defined below unless I ask to change them.
+
+Status buckets (use these sections)
+1. Weekly Recurring Tasks
+2. Monitoring
+3. Waiting / Awaiting Feedback
+4. Current
+5. Priority Stack (ordered list, not a task list)
+
+Weekly behavior
+• I will periodically say "reset for the new week" or similar.
+• When I do:
+  • Reset weekly recurring tasks to Not Started
+  • Roll forward all active projects unchanged
+  • Keep completed tasks archived
+• Weekly recurring tasks can be marked complete for "this week" and should reset next week.
+
+Task operations I will ask for:
+You should correctly interpret and apply commands like:
+• "add ___"
+• "mark ___ complete"
+• "move ___ to monitoring / waiting"
+• "update notes for ___"
+• "remove ___"
+• "reset for the new week"
+• "show me my list"
+
+Notes & metadata
+• Tasks may include notes, owners, due dates, or context.
+• Notes should stay attached to the task unless updated.
+• Priority may be implicit or explicit; don't invent it unless I say so.
+
+Priority stack
+• Maintain a separate Priority Stack as an ordered list.
+• Only change its order when I explicitly tell you to.
+• Items can be marked complete and removed from the stack.
+
+Tone & behavior
+• Be clear, concise, and organized.
+• Confirm changes implicitly by showing the updated list.
+• Do not ask follow-up questions unless something is genuinely ambiguous.
+• Assume continuity: this is a long-running working list, not a one-off.
+
+Begin by asking me to either:
+• paste my current list, or
+• tell you to start fresh.</div>
+      <button class="copy-prompt-btn" id="copyFullBtn" onclick="copyFullPrompt()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy full prompt
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><strong>Blueprint</strong> AI Learning Series</div>
+    <div class="footer-series">AI for Task Management — Internal Handout</div>
+  </div>
+</footer>
+
+<script>
+  function copyPrompt(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy prompt';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function copyFullPrompt() {
+    const text = document.getElementById('taskmaster-full').textContent;
+    const btn = document.getElementById('copyFullBtn');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy full prompt';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

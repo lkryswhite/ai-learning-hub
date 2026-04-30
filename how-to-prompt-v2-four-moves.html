@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Prompt · Video 2 · Four Moves</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:        #F5EFE0;
+      --cream-dark:   #EDE4CE;
+      --navy:         #1E2B4A;
+      --navy-mid:     #2D3F6B;
+      --lavender:     #9B8EC4;
+      --lavender-lt:  #C8C0E2;
+      --lavender-bg:  #EAE6F5;
+      --teal:         #7BBFB0;
+      --teal-lt:      #A8D5CC;
+      --teal-bg:      #E2F2EF;
+      --peach:        #E8A882;
+      --peach-lt:     #F2C9AE;
+      --peach-bg:     #FAF0E8;
+      --gold:         #D4A843;
+      --gold-lt:      #E8C87A;
+      --gold-bg:      #FBF3DC;
+      --text:         #1E2B4A;
+      --text-mid:     #4A5568;
+      --text-light:   #8896A8;
+      --border:       #D8CEBC;
+      --white:        #FFFFFF;
+      --shadow-sm:    0 1px 4px rgba(30,43,74,0.08);
+      --radius:       12px;
+      --radius-sm:    8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+    button { cursor: pointer; font-family: inherit; border: none; }
+
+    .site-header { background: var(--navy); padding: 48px 40px 44px; position: relative; overflow: hidden; }
+    .site-header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: var(--teal); opacity: 0.14; }
+    .site-header::after { content: ''; position: absolute; bottom: -20px; right: 180px; width: 110px; height: 110px; border-radius: 50%; background: var(--gold); opacity: 0.2; }
+    .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+    .series-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-weight: 600; }
+    .site-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(32px, 4.5vw, 52px); font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .site-title span { color: var(--gold-lt); }
+    .site-subtitle { font-size: 15px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+    .intro-strip { background: var(--gold-bg); border-bottom: 2px solid var(--gold-lt); padding: 16px 40px; }
+    .intro-strip p { max-width: 960px; margin: 0 auto; font-size: 14px; color: var(--text-mid); }
+
+    main { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .section-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-light); margin-bottom: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* MOVE CARDS */
+    .moves-section { margin-bottom: 64px; }
+    .move-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .move-header { padding: 22px 26px; display: flex; align-items: flex-start; gap: 18px; }
+    .move-card:nth-child(2) .move-header { background: var(--lavender); }
+    .move-card:nth-child(3) .move-header { background: var(--teal); }
+    .move-card:nth-child(4) .move-header { background: var(--peach); }
+    .move-card:nth-child(5) .move-header { background: var(--navy-mid); }
+    .move-num { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.25); color: var(--white); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .move-title { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: var(--white); font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+    .move-subtitle { font-size: 12.5px; color: rgba(255,255,255,0.65); font-style: italic; }
+    .move-card:nth-child(5) .move-title { color: var(--gold-lt); }
+    .move-card:nth-child(5) .move-subtitle { color: rgba(255,255,255,0.55); }
+
+    .move-body { background: var(--white); padding: 26px; }
+    .move-insight { font-size: 14px; color: var(--text-mid); line-height: 1.65; margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+    .move-insight strong { color: var(--text); }
+
+    /* UPGRADE TIERS */
+    .upgrade-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); margin-bottom: 12px; font-weight: 600; }
+    .upgrade-rows { display: flex; flex-direction: column; gap: 8px; margin-bottom: 0; }
+    .upgrade-row { display: grid; grid-template-columns: 56px 1fr; gap: 10px; align-items: start; }
+    .upgrade-tier { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding-top: 11px; color: var(--text-light); }
+    .upgrade-row.best .upgrade-tier { color: var(--lavender); }
+    .upgrade-pill { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13.5px; color: var(--text-mid); line-height: 1.45; font-style: italic; }
+    .upgrade-row.best .upgrade-pill { background: var(--lavender-bg); border-color: var(--lavender-lt); color: var(--text); font-style: normal; }
+
+    /* PROMPT TEMPLATE */
+    .prompt-wrap { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 16px; }
+    .prompt-header { background: var(--navy); padding: 10px 16px; }
+    .prompt-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .prompt-body { padding: 16px; }
+    .prompt-text { font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+    .copy-btn { background: var(--lavender); color: var(--white); border: none; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: background 0.18s; margin-top: 12px; }
+    .copy-btn:hover { background: var(--navy-mid); }
+    .copy-btn.copied { background: var(--teal); }
+
+    .note-box { background: var(--gold-bg); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 16px; font-size: 13px; color: var(--text-mid); line-height: 1.55; margin-top: 16px; }
+    .note-box strong { color: var(--text); }
+
+    /* MVT */
+    .mvt-section { margin-bottom: 64px; }
+    .mvt-block { background: var(--navy); border-radius: var(--radius); padding: 36px 40px; position: relative; overflow: hidden; }
+    .mvt-block::before { content: ''; position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; border-radius: 50%; background: var(--teal); opacity: 0.15; }
+    .mvt-block::after { content: ''; position: absolute; bottom: -20px; left: 60px; width: 90px; height: 90px; border-radius: 50%; background: var(--peach); opacity: 0.18; }
+    .mvt-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal-lt); margin-bottom: 8px; font-weight: 600; position: relative; }
+    .mvt-intro { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 28px; font-style: italic; position: relative; }
+    .mvt-items { display: flex; flex-direction: column; gap: 18px; position: relative; }
+    .mvt-item { display: flex; align-items: flex-start; gap: 16px; }
+    .mvt-num { width: 34px; height: 34px; border-radius: 50%; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--navy); }
+    .mvt-item:nth-child(1) .mvt-num { background: var(--lavender-lt); }
+    .mvt-item:nth-child(2) .mvt-num { background: var(--teal-lt); }
+    .mvt-item:nth-child(3) .mvt-num { background: var(--peach-lt); }
+    .mvt-title { font-family: 'Playfair Display', Georgia, serif; font-size: 18px; color: var(--white); margin-bottom: 2px; font-weight: 700; }
+    .mvt-desc { font-size: 13px; color: rgba(255,255,255,0.45); font-style: italic; }
+
+    /* DEBUG TABLE */
+    .debug-section { margin-bottom: 64px; }
+    .debug-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .debug-table thead tr { background: var(--navy); }
+    .debug-table thead th { padding: 12px 20px; text-align: left; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .debug-table thead th:first-child { color: var(--gold-lt); }
+    .debug-table tbody tr { background: var(--white); }
+    .debug-table tbody tr:nth-child(even) { background: #FAFAF8; }
+    .debug-table tbody tr:hover { background: var(--gold-bg); }
+    .debug-table td { padding: 14px 20px; font-size: 13.5px; vertical-align: top; line-height: 1.5; border-top: 1px solid var(--border); }
+    .debug-table td:first-child { font-weight: 700; color: var(--gold); font-size: 12px; white-space: nowrap; }
+    .debug-table td:nth-child(2) { color: var(--text); font-weight: 500; }
+    .debug-table td:nth-child(3) { color: var(--text-light); font-style: italic; font-size: 13px; }
+
+    /* TODAY */
+    .today-section { margin-bottom: 64px; }
+    .today-block { background: var(--navy); border-radius: var(--radius); padding: 36px 40px; position: relative; overflow: hidden; }
+    .today-block::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: var(--lavender); opacity: 0.14; }
+    .today-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--peach-lt); margin-bottom: 10px; font-weight: 600; position: relative; }
+    .today-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: var(--white); font-weight: 700; margin-bottom: 22px; line-height: 1.3; position: relative; }
+    .today-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; position: relative; }
+    .today-step { display: flex; align-items: flex-start; gap: 14px; }
+    .today-num { width: 24px; height: 24px; border-radius: 50%; background: var(--peach); color: var(--white); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .today-step span { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+
+    /* REFLECTION */
+    .reflection-section { margin-bottom: 64px; }
+    .reflection-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
+    .reflection-nudge { font-size: 15px; color: var(--text-mid); font-style: italic; line-height: 1.65; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .reflection-area { width: 100%; min-height: 96px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); resize: vertical; line-height: 1.55; outline: none; transition: border-color 0.2s; }
+    .reflection-area:focus { border-color: var(--lavender); }
+    .reflection-area::placeholder { color: var(--text-light); font-style: italic; }
+
+    /* HERO CLOSER */
+    .hero-closer { background: var(--navy); border-radius: var(--radius); padding: 52px 44px; text-align: center; position: relative; overflow: hidden; }
+    .hero-closer::before { content: ''; position: absolute; bottom: -60px; right: -60px; width: 260px; height: 260px; border-radius: 50%; background: var(--teal); opacity: 0.15; }
+    .hero-closer::after { content: ''; position: absolute; top: -30px; left: -30px; width: 150px; height: 150px; border-radius: 50%; background: var(--lavender); opacity: 0.18; }
+    .hero-closer-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; font-weight: 600; position: relative; }
+    .hero-closer-text { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(26px, 4vw, 40px); color: var(--white); line-height: 1.2; font-weight: 900; position: relative; }
+    .hero-closer-text em { color: var(--gold-lt); font-style: italic; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="series-tag">Blueprint AI Workshop · How to Prompt · Video 2 of 3</div>
+    <h1 class="site-title">Four Moves That Change<br><span>Your Output.</span></h1>
+    <p class="site-subtitle">Audience Spec · Show Examples · Ask for Options · Critique Loop</p>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <p>Use this after watching Video 2. Each move takes ~30 seconds to apply. The compound effect is real.</p>
+</div>
+
+<main>
+
+  <div class="moves-section">
+    <div class="section-label">The four moves</div>
+
+    <!-- MOVE 1 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">1</div>
+        <div>
+          <div class="move-title">Get Specific About the Audience</div>
+          <div class="move-subtitle">The same task for different audiences should feel like different documents</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> "A student" is an audience. "A pre-med junior" is better. "A pre-med junior two weeks from their exam who's overwhelmed and skimming" actually reshapes the output. This applies beyond content — emails, strategy docs, Slack messages.
+        </div>
+        <div class="upgrade-label">Upgrade your audience spec</div>
+        <div class="upgrade-rows">
+          <div class="upgrade-row"><div class="upgrade-tier">Not</div><div class="upgrade-pill">"Write for students."</div></div>
+          <div class="upgrade-row"><div class="upgrade-tier">Better</div><div class="upgrade-pill">"Write for pre-med juniors."</div></div>
+          <div class="upgrade-row best">
+            <div class="upgrade-tier">Best</div>
+            <div class="upgrade-pill">"Write for a pre-med junior two weeks from their exam who understands basic biology but finds biochemistry intimidating. They're studying in 20-minute windows and will skim anything that doesn't feel immediately relevant."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 2 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">2</div>
+        <div>
+          <div class="move-title">Show It What Good Looks Like</div>
+          <div class="move-subtitle">Don't describe your voice. Paste it.</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> Two or three examples consistently outperform 500 words of instructions. The model mimics what it sees far more reliably than what you say. When examples and instructions conflict, <strong>the model follows the examples</strong> — they're the loudest signal in the prompt.
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Template — paste your examples</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-examples">Here are two examples of the style I'm going for:
+
+[paste example 1]
+
+[paste example 2]
+
+Write [your thing] in the same voice. Match the tone, sentence length, and level of formality.</pre>
+            <button class="copy-btn" id="cb-examples" onclick="copyPrompt('p-examples','cb-examples')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="note-box">This also works for format — paste a filled-in row and say "follow this schema." Demonstrations beat descriptions.</div>
+      </div>
+    </div>
+
+    <!-- MOVE 3 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">3</div>
+        <div>
+          <div class="move-title">Ask for Options Before You Commit</div>
+          <div class="move-subtitle">"Distinctly different" is the load-bearing phrase</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> Most people use AI as an executor — one output, then edit. That means you're always working inside the first interpretation the model landed on. Without "distinctly different," you get five near-duplicates. With it, you get real strategic range.
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Template — ask for range</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-options">Give me five distinctly different approaches to this. They should differ in structure, framing, and core assumptions — not just surface phrasing. Don't hedge between them.</pre>
+            <button class="copy-btn" id="cb-options" onclick="copyPrompt('p-options','cb-options')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="note-box"><strong>Best for:</strong> content strategy, communications, framing a difficult message, or any task where you're not sure yet what "good" looks like.</div>
+      </div>
+    </div>
+
+    <!-- MOVE 4 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">4</div>
+        <div>
+          <div class="move-title">Ask It to Critique Its Own Output</div>
+          <div class="move-subtitle">The most underused habit</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> This separates people who get consistently good output from people who think the tool is inconsistent. The key is a specific, adversarial persona — "skeptical senior editor" works. "Make it better" doesn't. Note: the critique loop improves structure and clarity. It doesn't catch factual errors. You still read the output.
+        </div>
+        <div class="prompt-wrap" style="margin-bottom: 14px;">
+          <div class="prompt-header"><span class="prompt-label">Single critique turn</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-critique">Now critique what you just wrote as if you were a skeptical senior editor. List the three weakest parts, the two most confusing sentences, and one structural problem. Then revise.</pre>
+            <button class="copy-btn" id="cb-critique" onclick="copyPrompt('p-critique','cb-critique')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Three-pass version (one prompt, all three steps)</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-threepass">Perform three passes.
+
+Pass 1 — Draft: produce a first draft.
+
+Pass 2 — Critique: switch into the persona of a skeptical senior reviewer; list exactly three weaknesses, most to least important.
+
+Pass 3 — Revise: rewrite addressing every weakness. End with a "Changes" section, one line per change.</pre>
+            <button class="copy-btn" id="cb-threepass" onclick="copyPrompt('p-threepass','cb-threepass')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="note-box" style="margin-top: 14px;"><strong>Persona by use case:</strong> Writing → "skeptical senior editor at [publication]" · Strategy → "adversarial peer reviewer who thinks this will fail" · Content → "a student who has never heard of this topic"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MVT -->
+  <div class="mvt-section">
+    <div class="section-label">The minimum viable three</div>
+    <div class="mvt-block">
+      <div class="mvt-eyebrow">If you only build three habits from this video</div>
+      <div class="mvt-intro">You don't need all of this every time. But make it these.</div>
+      <div class="mvt-items">
+        <div class="mvt-item">
+          <div class="mvt-num">1</div>
+          <div><div class="mvt-title">Specify the audience (for real)</div><div class="mvt-desc">Not just "a student" — who they are, what they know, what they need</div></div>
+        </div>
+        <div class="mvt-item">
+          <div class="mvt-num">2</div>
+          <div><div class="mvt-title">Ask for five distinctly different options</div><div class="mvt-desc">Before you pick one and execute</div></div>
+        </div>
+        <div class="mvt-item">
+          <div class="mvt-num">3</div>
+          <div><div class="mvt-title">Run one critique loop before you accept anything</div><div class="mvt-desc">Name the adversarial persona — don't just say "make it better"</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEBUG -->
+  <div class="debug-section">
+    <div class="section-label">Bad output? Check these in order</div>
+    <table class="debug-table">
+      <thead><tr><th>#</th><th>Check this</th><th>Ask yourself</th></tr></thead>
+      <tbody>
+        <tr><td>01</td><td>Audience — is it specific enough?</td><td>Could a stranger identify exactly who you're writing for?</td></tr>
+        <tr><td>02</td><td>Task clarity — is the ask unambiguous?</td><td>Could someone with no context follow it?</td></tr>
+        <tr><td>03</td><td>Constraints — did you define "done"?</td><td>Did you specify length, format, or tone?</td></tr>
+        <tr><td>04</td><td>Iterate — did you talk back to it?</td><td>Or did you accept the first draft and complain?</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TODAY -->
+  <div class="today-section">
+    <div class="section-label">Do this today</div>
+    <div class="today-block">
+      <div class="today-eyebrow">Try It</div>
+      <div class="today-headline">Take one thing you're about to write today — a Slack message, an email, a document, anything.</div>
+      <ul class="today-steps">
+        <li class="today-step"><span class="today-num">1</span><span>Write out who's actually going to read this — specifically.</span></li>
+        <li class="today-step"><span class="today-num">2</span><span>Ask for five distinctly different versions before you pick one.</span></li>
+        <li class="today-step"><span class="today-num">3</span><span>Run one critique loop on the version you choose before you send it.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REFLECTION -->
+  <div class="reflection-section">
+    <div class="section-label">Reflect</div>
+    <div class="reflection-card">
+      <div class="reflection-nudge">Which of the four moves is most different from how you currently use AI? What's one task you do regularly — content, comms, or strategy — where you'd apply it this week?</div>
+      <textarea class="reflection-area" id="reflectArea" placeholder="Write here — your notes stay in this tab..." oninput="saveReflection()"></textarea>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-closer">
+    <div class="hero-closer-eyebrow">If you remember nothing else from this video</div>
+    <div class="hero-closer-text">Audience. Options.<br><em>Critique loop.</em><br>Do these three things every time.</div>
+  </div>
+
+</main>
+
+<script>
+  function copyPrompt(preId, btnId) {
+    var text = document.getElementById(preId).textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.getElementById(btnId), orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(function() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
+  function saveReflection() { try { localStorage.setItem('bp-p2-reflect', document.getElementById('reflectArea').value); } catch(e) {} }
+  (function() { try { var s = localStorage.getItem('bp-p2-reflect'); if (s) document.getElementById('reflectArea').value = s; } catch(e) {} })();
+</script>
+</body>
+</html>

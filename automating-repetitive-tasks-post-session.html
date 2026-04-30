@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Automating Repetitive Tasks — Post-Session</title>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --bg:            #F7F4EF;
+      --bg-alt:        #EDE8DF;
+      --header-bg:     #1E1108;
+      --card-bg:       #FFFFFF;
+      --border:        #DDD5C8;
+      --text:          #1E1108;
+      --text-mid:      #5C4030;
+      --text-light:    #8A7060;
+      --teal:          #3BBFBF;
+      --teal-dark:     #2A9D9D;
+      --teal-faint:    #EBF9F9;
+      --amber:         #C17C2E;
+      --amber-faint:   #FDF3E5;
+      --shadow-sm:     0 1px 3px rgba(30,17,8,0.08);
+      --shadow-md:     0 4px 16px rgba(30,17,8,0.12);
+      --shadow-lg:     0 8px 40px rgba(30,17,8,0.18);
+      --radius:        10px;
+      --radius-sm:     6px;
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    button { cursor: pointer; font-family: inherit; border: none; }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--header-bg);
+      color: #fff;
+      padding: 36px 40px 32px;
+      position: relative;
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .brand {
+      font-family: 'Georgia', serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: inline-block;
+    }
+    .site-title {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: normal;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .site-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.04em;
+      font-style: italic;
+    }
+
+    /* ── INTRO STRIP ── */
+    .intro-strip {
+      background: var(--teal-faint);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 40px;
+    }
+    .intro-strip p {
+      max-width: 960px;
+      margin: 0 auto;
+      font-size: 14.5px;
+      color: var(--text-mid);
+      font-style: italic;
+    }
+    .intro-strip strong { color: var(--text); font-style: normal; }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARD GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    @media (max-width: 680px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── CARD ── */
+    .level-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .level-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      background: var(--header-bg);
+      padding: 20px 22px 16px;
+      position: relative;
+    }
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+    .level-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: #fff;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+    }
+    .level-tag {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-family: sans-serif;
+    }
+    .card-title {
+      font-size: 18px;
+      color: #fff;
+      font-weight: normal;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+    .card-rung {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      font-style: italic;
+    }
+
+    .card-body {
+      padding: 18px 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.55;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .card-when {
+      font-size: 12.5px;
+      color: var(--text-light);
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      border-left: 3px solid var(--teal);
+      line-height: 1.5;
+    }
+    .card-when strong { color: var(--text-mid); }
+
+    .steal-btn {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      padding: 11px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-family: sans-serif;
+      font-weight: 600;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .steal-btn:hover { background: var(--teal-dark); }
+    .steal-btn svg { flex-shrink: 0; }
+
+    /* ── QUIZ SECTION ── */
+    .quiz-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      margin-bottom: 60px;
+    }
+    .quiz-intro-bar {
+      background: var(--header-bg);
+      padding: 20px 28px 18px;
+    }
+    .quiz-intro-heading {
+      font-size: 18px;
+      color: #fff;
+      font-weight: normal;
+      margin-bottom: 4px;
+    }
+    .quiz-intro-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      font-style: italic;
+    }
+    .quiz-questions {
+      padding: 8px 0;
+    }
+    .quiz-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 28px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .quiz-item:last-child { border-bottom: none; }
+    .quiz-item.answered-yes { background: var(--teal-faint); }
+    .quiz-item.answered-no  { background: #FAF8F5; }
+    .quiz-q {
+      font-size: 14.5px;
+      color: var(--text);
+      line-height: 1.45;
+      flex: 1;
+    }
+    .quiz-q-num {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-right: 10px;
+      letter-spacing: 0.05em;
+    }
+    .quiz-btns {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .quiz-btn {
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-family: sans-serif;
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--text-mid);
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .quiz-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+    .quiz-btn.selected-yes {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+    }
+    .quiz-btn.selected-no {
+      background: var(--bg-alt);
+      border-color: #C0B8AC;
+      color: var(--text-light);
+    }
+
+    /* score + result bar */
+    .quiz-result-area {
+      border-top: 2px solid var(--border);
+      padding: 22px 28px 24px;
+      background: var(--bg);
+    }
+    .quiz-score-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .quiz-score-label {
+      font-family: sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      white-space: nowrap;
+    }
+    .quiz-score-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .quiz-score-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: var(--teal);
+      transition: width 0.35s cubic-bezier(.4,0,.2,1), background 0.3s;
+      width: 0%;
+    }
+    .quiz-score-num {
+      font-family: sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      min-width: 36px;
+      text-align: right;
+    }
+    .quiz-verdict {
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 14.5px;
+      line-height: 1.55;
+      transition: all 0.25s;
+      display: none;
+    }
+    .quiz-verdict.visible { display: block; }
+    .quiz-verdict-title {
+      font-family: sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .quiz-verdict-body { color: var(--text-mid); }
+    .quiz-verdict.v-low  { background: #F5EFE6; border: 1px solid #D9C9B3; }
+    .quiz-verdict.v-low .quiz-verdict-title { color: var(--amber); }
+    .quiz-verdict.v-mid  { background: var(--teal-faint); border: 1px solid #A8E0E0; }
+    .quiz-verdict.v-mid .quiz-verdict-title { color: var(--teal-dark); }
+    .quiz-verdict.v-high { background: #E8F7F0; border: 1px solid #A0D8BE; }
+    .quiz-verdict.v-high .quiz-verdict-title { color: #1F7A52; }
+    .quiz-caveat {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--text-light);
+      font-style: italic;
+      line-height: 1.55;
+      display: none;
+    }
+    .quiz-caveat.visible { display: block; }
+    .quiz-reset-btn {
+      margin-top: 14px;
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--text-light);
+      font-family: sans-serif;
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: all 0.15s;
+      display: none;
+    }
+    .quiz-reset-btn.visible { display: inline-flex; align-items: center; gap: 6px; }
+    .quiz-reset-btn:hover { border-color: var(--text-mid); color: var(--text-mid); }
+
+    /* ── MODAL OVERLAY ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 17, 8, 0.72);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* ── MODAL PANEL ── */
+    .modal-panel {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 640px;
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.22s;
+    }
+    .modal-overlay.open .modal-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      background: var(--header-bg);
+      padding: 22px 24px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .modal-header-text { flex: 1; }
+    .modal-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-family: sans-serif;
+      margin-bottom: 6px;
+    }
+    .modal-title {
+      font-size: 20px;
+      color: #fff;
+      font-weight: normal;
+    }
+    .modal-close {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: rgba(255,255,255,0.7);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 18px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .modal-close:hover {
+      background: rgba(255,255,255,0.22);
+      color: #fff;
+    }
+
+    .modal-body { padding: 24px; }
+
+    .modal-context {
+      font-size: 14px;
+      color: var(--text-mid);
+      margin-bottom: 22px;
+      line-height: 1.6;
+    }
+
+    /* ── PROMPT / CODE BLOCK ── */
+    .prompt-section { margin-bottom: 24px; }
+    .prompt-label {
+      font-size: 11px;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      font-family: sans-serif;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .prompt-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .prompt-box {
+      background: #1E1108;
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .prompt-text {
+      font-family: 'Courier New', 'Consolas', monospace;
+      font-size: 12.5px;
+      color: #D4C8B8;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+    .copy-btn {
+      margin-top: 10px;
+      background: var(--teal-faint);
+      border: 1px solid var(--teal);
+      color: var(--teal-dark);
+      font-size: 12.5px;
+      font-family: sans-serif;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .copy-btn:hover { background: #d5f0f0; }
+    .copy-btn.copied {
+      background: #d5f0f0;
+      color: var(--teal-dark);
+    }
+
+    /* ── DIVIDER ── */
+    .modal-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist-section { margin-bottom: 24px; }
+    .checklist-title {
+      font-size: 13px;
+      font-family: sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .checklist-title svg { color: var(--amber); flex-shrink: 0; }
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13.5px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      width: 100%;
+    }
+    .checklist input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      position: relative;
+      background: #fff;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .checklist input[type="checkbox"]:checked {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+    .checklist input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 7px;
+      height: 4px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg);
+    }
+    .checklist label:has(input:checked) span {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    /* ── REFLECTION NUDGE (in modal) ── */
+    .reflection-nudge {
+      background: var(--amber-faint);
+      border: 1px solid rgba(193,124,46,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .nudge-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      font-family: sans-serif;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+    .nudge-text {
+      font-size: 14px;
+      color: var(--text-mid);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* ── REFLECTION SECTION ── */
+    .reflection-section {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+    .reflection-heading {
+      font-size: 20px;
+      color: var(--text);
+      font-weight: normal;
+      margin-bottom: 6px;
+    }
+    .reflection-sub {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      font-style: italic;
+      margin-bottom: 22px;
+    }
+    .reflect-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .reflect-tab {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 18px;
+      font-size: 13px;
+      font-family: sans-serif;
+      color: var(--text-mid);
+      transition: all 0.15s;
+    }
+    .reflect-tab:hover { border-color: var(--teal); color: var(--teal-dark); }
+    .reflect-tab.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+      font-weight: 600;
+    }
+    .reflect-nudge-box {
+      font-size: 14px;
+      color: var(--text-mid);
+      font-style: italic;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      line-height: 1.6;
+      min-height: 56px;
+      transition: opacity 0.2s;
+    }
+    .reflect-textarea {
+      width: 100%;
+      min-height: 120px;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      font-size: 14px;
+      font-family: 'Georgia', serif;
+      color: var(--text);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+      line-height: 1.6;
+    }
+    .reflect-textarea:focus { border-color: var(--teal); }
+    .reflect-textarea { transition: border-color 0.15s, opacity 0.12s; }
+    .reflect-textarea::placeholder { color: var(--text-light); }
+    .reflect-note {
+      font-size: 11.5px;
+      color: var(--text-light);
+      margin-top: 8px;
+      font-style: italic;
+      font-family: sans-serif;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--header-bg);
+      color: rgba(255,255,255,0.4);
+      padding: 22px 40px;
+      font-size: 12px;
+      font-family: sans-serif;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+    .site-footer strong { color: var(--teal); letter-spacing: 0.1em; }
+
+    /* ── SCROLLBAR ── */
+    .modal-panel::-webkit-scrollbar { width: 6px; }
+    .modal-panel::-webkit-scrollbar-track { background: transparent; }
+    .modal-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      Blueprint
+    </div>
+    <h1 class="site-title">Automating Repetitive Tasks</h1>
+    <p class="site-subtitle">Post-Session Resource &mdash; The Automation Ladder</p>
+  </div>
+</header>
+
+<!-- ═══════════════════ INTRO STRIP ═══════════════════ -->
+<div class="intro-strip">
+  <p>Three tools from today&rsquo;s session. <strong>Open any card to grab the setup and make it yours.</strong> Copy the prompt, run through the checklist, then use the reflection section to connect it to your own work.</p>
+</div>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main>
+
+  <div class="section-label">The Three Rungs</div>
+
+  <!-- ─── CARD GRID ─── -->
+  <div class="cards-grid">
+
+    <!-- Card 1 -->
+    <div class="level-card">
+      <div class="card-header">
+        <div class="level-badge">
+          <span class="level-num">1</span>
+          <span class="level-tag">Reduce Thinking</span>
+        </div>
+        <div class="card-title">Format Transformer</div>
+        <div class="card-rung">Same input, same output &mdash; different shape</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Your data is correct but in the wrong structure for where it needs to go. AI handles the reformatting rules so you don&rsquo;t have to reconstruct them each time.</p>
+        <div class="card-when">
+          <strong>When to use:</strong> You&rsquo;re still copy-pasting, but you&rsquo;ve eliminated all the manual restructuring.
+        </div>
+        <button class="steal-btn" onclick="openModal('modal1')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Steal the Setup
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="level-card">
+      <div class="card-header">
+        <div class="level-badge">
+          <span class="level-num">2</span>
+          <span class="level-tag">Reduce Steps</span>
+        </div>
+        <div class="card-title">Classifier</div>
+        <div class="card-rung">AI embedded directly in your tools</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">Apply consistent judgment rules to a list, at scale. AI lives inside Google Sheets via Apps Script &mdash; you don&rsquo;t go get it, it&rsquo;s already there.</p>
+        <div class="card-when">
+          <strong>When to use:</strong> You have items to tag or categorize and the logic is consistent enough to teach once.
+        </div>
+        <button class="steal-btn" onclick="openModal('modal2')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Steal the Setup
+        </button>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="level-card">
+      <div class="card-header">
+        <div class="level-badge">
+          <span class="level-num">3</span>
+          <span class="level-tag">Remove Yourself</span>
+        </div>
+        <div class="card-title">Trigger → Action → Output</div>
+        <div class="card-rung">Set the rules once. It runs when it should.</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">You&rsquo;re not in the loop during execution &mdash; only at the end. The workflow fires when conditions are met and drops results where they belong.</p>
+        <div class="card-when">
+          <strong>When to use:</strong> The trigger is predictable and the output is consistent. You own the outcome, not every step.
+        </div>
+        <button class="steal-btn" onclick="openModal('modal3')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Steal the Setup
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /.cards-grid -->
+
+
+  <!-- ─── QUIZ SECTION ─── -->
+  <div class="section-label">Should I Automate This?</div>
+
+  <div class="quiz-section">
+    <div class="quiz-intro-bar">
+      <div class="quiz-intro-heading">Pick a task. Answer five questions.</div>
+      <div class="quiz-intro-sub">Any recurring task — something you've done before and will do again.</div>
+    </div>
+
+    <div class="quiz-questions" id="quizQuestions">
+      <div class="quiz-item" data-index="0">
+        <span class="quiz-q"><span class="quiz-q-num">01</span>Do I do this more than twice a month?</span>
+        <div class="quiz-btns">
+          <button class="quiz-btn" onclick="answerQuiz(0, true, this)">Yes</button>
+          <button class="quiz-btn" onclick="answerQuiz(0, false, this)">No</button>
+        </div>
+      </div>
+      <div class="quiz-item" data-index="1">
+        <span class="quiz-q"><span class="quiz-q-num">02</span>Is the output format basically the same every time?</span>
+        <div class="quiz-btns">
+          <button class="quiz-btn" onclick="answerQuiz(1, true, this)">Yes</button>
+          <button class="quiz-btn" onclick="answerQuiz(1, false, this)">No</button>
+        </div>
+      </div>
+      <div class="quiz-item" data-index="2">
+        <span class="quiz-q"><span class="quiz-q-num">03</span>Could I write down every step I take?</span>
+        <div class="quiz-btns">
+          <button class="quiz-btn" onclick="answerQuiz(2, true, this)">Yes</button>
+          <button class="quiz-btn" onclick="answerQuiz(2, false, this)">No</button>
+        </div>
+      </div>
+      <div class="quiz-item" data-index="3">
+        <span class="quiz-q"><span class="quiz-q-num">04</span>Does it take more than 5 minutes of actual effort?</span>
+        <div class="quiz-btns">
+          <button class="quiz-btn" onclick="answerQuiz(3, true, this)">Yes</button>
+          <button class="quiz-btn" onclick="answerQuiz(3, false, this)">No</button>
+        </div>
+      </div>
+      <div class="quiz-item" data-index="4">
+        <span class="quiz-q"><span class="quiz-q-num">05</span>Would I be annoyed if I had to do it again next week?</span>
+        <div class="quiz-btns">
+          <button class="quiz-btn" onclick="answerQuiz(4, true, this)">Yes</button>
+          <button class="quiz-btn" onclick="answerQuiz(4, false, this)">No</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-result-area">
+      <div class="quiz-score-row">
+        <span class="quiz-score-label">Yes count</span>
+        <div class="quiz-score-track">
+          <div class="quiz-score-fill" id="quizScoreFill"></div>
+        </div>
+        <span class="quiz-score-num" id="quizScoreNum">— / 5</span>
+      </div>
+
+      <div class="quiz-verdict v-low" id="verdictLow">
+        <div class="quiz-verdict-title">Not quite yet</div>
+        <div class="quiz-verdict-body">Probably not the right candidate right now. Move on and come back later.</div>
+      </div>
+      <div class="quiz-verdict v-mid" id="verdictMid">
+        <div class="quiz-verdict-title">Worth trying</div>
+        <div class="quiz-verdict-body">Worth starting at Level 1. Get a prompt working in a chatbot first — see if the output is good enough to trust.</div>
+      </div>
+      <div class="quiz-verdict v-high" id="verdictHigh">
+        <div class="quiz-verdict-title">Do this now</div>
+        <div class="quiz-verdict-body">Textbook automation candidate. Open Level 1 above, steal the setup, and adapt it to your task today.</div>
+      </div>
+
+      <p class="quiz-caveat" id="quizCaveat">Even a low score doesn&rsquo;t mean AI can&rsquo;t help. It just means you&rsquo;re not at the &ldquo;automate it away&rdquo; stage yet &mdash; Level 1 could still give you a win.</p>
+
+      <button class="quiz-reset-btn" id="quizResetBtn" onclick="resetQuiz()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── REFLECTION SECTION ─── -->
+  <div class="section-label">Reflection</div>
+
+  <div class="reflection-section">
+    <h2 class="reflection-heading">Where do you land?</h2>
+    <p class="reflection-sub">Pick the level you&rsquo;re working from and use the prompt to connect it to your own work.</p>
+
+    <div class="reflect-tabs">
+      <button class="reflect-tab active" onclick="setTab(this, 0)">Level 1 — Reduce Thinking</button>
+      <button class="reflect-tab" onclick="setTab(this, 1)">Level 2 — Reduce Steps</button>
+      <button class="reflect-tab" onclick="setTab(this, 2)">Level 3 — Remove Yourself</button>
+    </div>
+
+    <div class="reflect-nudge-box" id="reflectNudge">
+      What&rsquo;s one recurring task in your work where you&rsquo;re doing cognitive work that follows the same rules every time? What would AI need to know to do it for you?
+    </div>
+
+    <textarea class="reflect-textarea" id="reflectArea" placeholder="Write your notes here…" oninput="saveReflection()"></textarea>
+    <p class="reflect-note">Notes are saved automatically in this browser. They&rsquo;ll be here next time you open this file.</p>
+  </div>
+
+</main>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="site-footer">
+  <strong>Blueprint</strong> &nbsp;&middot;&nbsp; Automating Repetitive Tasks &nbsp;&middot;&nbsp; Keep it: one task, one rung, this week.
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════
+     MODAL 1 — Level 1: Format Transformer
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal1" onclick="handleOverlayClick(event, 'modal1')">
+  <div class="modal-panel">
+
+    <div class="modal-header">
+      <div class="modal-header-text">
+        <div class="modal-eyebrow">Level 1 &mdash; Reduce Thinking</div>
+        <div class="modal-title">Format Transformer</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal1')">&#x2715;</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-context">
+        This prompt reformats a source CSV into Asana-ready structure &mdash; the same transformation rules, applied reliably every time. Paste your CSV content and reference document into a chatbot, run this prompt, and import the output directly.
+      </p>
+
+      <div class="prompt-section">
+        <div class="prompt-label">The Prompt</div>
+        <div class="prompt-box">
+          <pre class="prompt-text" id="prompt1">You are a helpful assistant helping to organize data in a csv.
+You will be given a CSV with the following relevant information:
+  column 3: QID
+  column 4: Categories
+  column 5: Subcategory
+  column 6: Topic
+
+You should create a new CSV containing the following information:
+  column 1: Task (QID from column 3)
+  column 2: Specialty (Primary)
+  column 3: Project Title(s)
+  column 4: Section
+  column 5: Category
+  column 6: Subcategory
+  column 7: QID Topic (Topic from column 6)
+  column 8: QID Questions (always 1)
+
+Specialty (Primary) = "Emergency Medicine"
+Project Title(s) = "ECG Fundamental and Advanced Qbank Review"
+Section = "Triage (Review Content)"
+
+The fields for Categories and Subcategories both contain multiple
+values, separated by commas. To identify which of the values to
+bring into the new spreadsheet, you must search the attached
+Reference document. For Category, you will match one of the values
+in column 4 of the original sheet to column 1 of the reference
+sheet and report back the matching value. For Subcategory, you will
+match one of the values in column 5 of the original sheet to column
+2 of the reference sheet and report back the matching value.</pre>
+        </div>
+        <button class="copy-btn" id="copyBtn1" onclick="copyPrompt('prompt1', 'copyBtn1')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Copy prompt
+        </button>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Before you import, check:
+        </div>
+        <ul class="checklist">
+          <li><label><input type="checkbox" /><span>Column names match Asana&rsquo;s import requirements exactly</span></label></li>
+          <li><label><input type="checkbox" /><span>Spot-check any AI-created fields for accuracy before importing</span></label></li>
+          <li><label><input type="checkbox" /><span>No sensitive or student data was pasted into a public chatbot</span></label></li>
+          <li><label><input type="checkbox" /><span>Reviewed at least one row manually before importing the whole file</span></label></li>
+        </ul>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="reflection-nudge">
+        <div class="nudge-eyebrow">Reflect</div>
+        <p class="nudge-text">What&rsquo;s one recurring project setup in your work that follows the same structure every time? What transformation rules would you need to document for AI to do it reliably?</p>
+      </div>
+    </div><!-- /.modal-body -->
+  </div><!-- /.modal-panel -->
+</div><!-- /#modal1 -->
+
+
+<!-- ═══════════════════════════════════════════════
+     MODAL 2 — Level 2: Classifier (callGPT)
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal2" onclick="handleOverlayClick(event, 'modal2')">
+  <div class="modal-panel">
+
+    <div class="modal-header">
+      <div class="modal-header-text">
+        <div class="modal-eyebrow">Level 2 &mdash; Reduce Steps</div>
+        <div class="modal-title">Classifier: callGPT Function</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal2')">&#x2715;</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-context">
+        Paste this function into Google Apps Script (Extensions &rarr; Apps Script). Once it&rsquo;s in, use <code style="background:var(--bg);padding:2px 5px;border-radius:3px;font-size:12px;">&#61;callGPT(systemMessage, userPrompt)</code> as a formula directly in any cell. Start at Level 1 first &mdash; only move here once your prompt is producing reliable output.
+      </p>
+
+      <div class="prompt-section">
+        <div class="prompt-label">Google Apps Script</div>
+        <div class="prompt-box">
+          <pre class="prompt-text" id="prompt2">function callGPT(systemMessage, userPrompt) {
+  var apiKey = 'Your-API-Key-Here'; // Replace with your real API key
+  var url = 'https://api.openai.com/v1/chat/completions';
+  var payload = {
+    model: "gpt-4", // Or "gpt-3.5-turbo" for lower cost
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user",   content: userPrompt }
+    ],
+  };
+  var options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + apiKey },
+    payload: JSON.stringify(payload)
+  };
+  try {
+    var response = UrlFetchApp.fetch(url, options);
+    var json = JSON.parse(response.getContentText());
+    return json.choices[0].message.content.trim();
+  } catch (error) {
+    return "Error: " + error.toString();
+  }
+}</pre>
+        </div>
+        <button class="copy-btn" id="copyBtn2" onclick="copyPrompt('prompt2', 'copyBtn2')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Copy code
+        </button>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Before you scale it up, check:
+        </div>
+        <ul class="checklist">
+          <li><label><input type="checkbox" /><span>Prompt was tested at Level 1 first and producing reliable output</span></label></li>
+          <li><label><input type="checkbox" /><span>Output format is explicit in the prompt (comma-separated, pipe-delimited, etc.)</span></label></li>
+          <li><label><input type="checkbox" /><span>Tested on a small batch before running on the full dataset</span></label></li>
+          <li><label><input type="checkbox" /><span>Reviewed classifications for edge cases before trusting at scale</span></label></li>
+          <li><label><input type="checkbox" /><span>No personally identifiable information included in prompts sent to the API</span></label></li>
+        </ul>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="reflection-nudge">
+        <div class="nudge-eyebrow">Reflect</div>
+        <p class="nudge-text">If you ran this in your own Sheets setup, what data would you be classifying? What&rsquo;s the consistent judgment rule you&rsquo;d want AI to apply &mdash; and how would you write it down?</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /#modal2 -->
+
+
+<!-- ═══════════════════════════════════════════════
+     MODAL 3 — Level 3: Trigger → Action → Output
+═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal3" onclick="handleOverlayClick(event, 'modal3')">
+  <div class="modal-panel">
+
+    <div class="modal-header">
+      <div class="modal-header-text">
+        <div class="modal-eyebrow">Level 3 &mdash; Remove Yourself</div>
+        <div class="modal-title">Trigger &rarr; Action &rarr; Output</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal3')">&#x2715;</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-context">
+        This is the Zapier workflow that pulls a Looker report monthly, classifies each entry, and writes the results directly into a Google Sheet. You&rsquo;re only in the loop at the end &mdash; reviewing output, not producing it. Build this in Zapier, n8n, or Make.
+      </p>
+
+      <div class="prompt-section">
+        <div class="prompt-label">Workflow Spec (Zapier / n8n / Make)</div>
+        <div class="prompt-box">
+          <pre class="prompt-text" id="prompt3">1. Pull the Looker report for the previous month.
+   [Looker: Run Look]
+
+2. Identify the Month for which the report is for.
+
+3. Analyze each entry to determine if the work done was for
+   Content (reviewing questions, writing questions, etc)
+   or Production (storyboarding).
+
+4. Create as many rows as needed in the Google Sheet so that
+   each entry gets one line. Each row should contain:
+     • Payroll Category
+     • First Name
+     • Last Name
+     • Month
+     • Duration (formatted as a number with no text)
+     • Notes
+     • Whether the work was for Content or Production
+
+   [Google Sheets: Create Spreadsheet Row]</pre>
+        </div>
+        <button class="copy-btn" id="copyBtn3" onclick="copyPrompt('prompt3', 'copyBtn3')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Copy workflow
+        </button>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="checklist-section">
+        <div class="checklist-title">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Before you trust it to run solo, check:
+        </div>
+        <ul class="checklist">
+          <li><label><input type="checkbox" /><span>Trigger timing aligns with when source data is actually available</span></label></li>
+          <li><label><input type="checkbox" /><span>Looker and Google Sheets are both accessible to the automation</span></label></li>
+          <li><label><input type="checkbox" /><span>Output format reviewed manually before trusting it downstream</span></label></li>
+          <li><label><input type="checkbox" /><span>Monthly calendar reminder set to spot-audit the Sheet</span></label></li>
+        </ul>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="reflection-nudge">
+        <div class="nudge-eyebrow">Reflect</div>
+        <p class="nudge-text">What&rsquo;s a monthly or weekly output you produce that has a predictable trigger and a consistent destination? Can you fill in: &ldquo;When <em>[X happens]</em>, I want <em>[Y to happen]</em>, and the result should go to <em>[Z]</em>&rdquo;?</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /#modal3 -->
+
+
+<!-- ═══════════════════ SCRIPT ═══════════════════ -->
+<script>
+  // ── MODAL CONTROL ──
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleOverlayClick(e, id) {
+    if (e.target === document.getElementById(id)) closeModal(id);
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      ['modal1','modal2','modal3'].forEach(function(id) { closeModal(id); });
+    }
+  });
+
+  // ── COPY TO CLIPBOARD ──
+  function copyPrompt(preId, btnId) {
+    var text = document.getElementById(preId).textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.getElementById(btnId);
+      var orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.innerHTML = orig;
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(function() {
+      // Fallback for older browsers
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  // ── QUIZ ──
+  var quizAnswers = [null, null, null, null, null];
+
+  function answerQuiz(idx, isYes, btn) {
+    quizAnswers[idx] = isYes;
+
+    // Update button states for this question
+    var row = btn.closest('.quiz-item');
+    var btns = row.querySelectorAll('.quiz-btn');
+    btns[0].className = 'quiz-btn' + (isYes  ? ' selected-yes' : '');
+    btns[1].className = 'quiz-btn' + (!isYes ? ' selected-no'  : '');
+
+    // Row background
+    row.classList.toggle('answered-yes', isYes);
+    row.classList.toggle('answered-no', !isYes);
+
+    updateQuizScore();
+    localStorage.setItem('bp-quiz', JSON.stringify(quizAnswers));
+  }
+
+  function updateQuizScore() {
+    var answered = quizAnswers.filter(function(a) { return a !== null; }).length;
+    var yesCount = quizAnswers.filter(function(a) { return a === true; }).length;
+
+    // Score bar + number
+    var pct = (yesCount / 5) * 100;
+    var fill = document.getElementById('quizScoreFill');
+    fill.style.width = (answered > 0 ? pct : 0) + '%';
+    if (yesCount <= 2) fill.style.background = '#C17C2E';
+    else if (yesCount <= 4) fill.style.background = '#3BBFBF';
+    else fill.style.background = '#1F7A52';
+
+    document.getElementById('quizScoreNum').textContent = answered > 0 ? yesCount + ' / 5' : '\u2014 / 5';
+
+    // Verdicts — show only when at least one answer given
+    var vLow  = document.getElementById('verdictLow');
+    var vMid  = document.getElementById('verdictMid');
+    var vHigh = document.getElementById('verdictHigh');
+    var caveat = document.getElementById('quizCaveat');
+    var resetBtn = document.getElementById('quizResetBtn');
+
+    vLow.classList.remove('visible');
+    vMid.classList.remove('visible');
+    vHigh.classList.remove('visible');
+
+    if (answered > 0) {
+      if (yesCount <= 2)      vLow.classList.add('visible');
+      else if (yesCount <= 4) vMid.classList.add('visible');
+      else                    vHigh.classList.add('visible');
+
+      caveat.classList.add('visible');
+      resetBtn.classList.add('visible');
+    } else {
+      caveat.classList.remove('visible');
+      resetBtn.classList.remove('visible');
+    }
+  }
+
+  function resetQuiz() {
+    quizAnswers = [null, null, null, null, null];
+    document.querySelectorAll('.quiz-item').forEach(function(row) {
+      row.classList.remove('answered-yes', 'answered-no');
+      row.querySelectorAll('.quiz-btn').forEach(function(b) { b.className = 'quiz-btn'; });
+    });
+    updateQuizScore();
+    localStorage.removeItem('bp-quiz');
+  }
+
+  // ── REFLECTION TABS ──
+  var nudges = [
+    "What\u2019s one recurring task in your work where you\u2019re doing cognitive work that follows the same rules every time? What would AI need to know to do it for you?",
+    "If you set up the callGPT function in your own Sheets, what data would you be classifying? What\u2019s the consistent judgment rule \u2014 and how would you write it down?",
+    "What\u2019s a monthly or weekly output you produce that has a predictable trigger and a consistent destination? Can you fill in: \u201cWhen [X happens], I want [Y to happen], and the result should go to [Z].\u201d"
+  ];
+
+  var activeTabIdx = 0;
+
+  function saveReflection() {
+    localStorage.setItem('bp-reflect-' + activeTabIdx, document.getElementById('reflectArea').value);
+  }
+
+  function setTab(el, idx) {
+    // Save current tab's content before switching
+    saveReflection();
+
+    activeTabIdx = idx;
+    document.querySelectorAll('.reflect-tab').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+
+    var box = document.getElementById('reflectNudge');
+    var area = document.getElementById('reflectArea');
+    box.style.opacity = '0';
+    area.style.opacity = '0';
+    setTimeout(function() {
+      box.textContent = nudges[idx];
+      area.value = localStorage.getItem('bp-reflect-' + idx) || '';
+      box.style.opacity = '1';
+      area.style.opacity = '1';
+    }, 120);
+  }
+
+  // ── INIT: restore saved state on load ──
+  (function init() {
+    // Restore reflection for tab 0
+    var saved0 = localStorage.getItem('bp-reflect-0');
+    if (saved0) document.getElementById('reflectArea').value = saved0;
+
+    // Restore quiz answers
+    try {
+      var savedQuiz = JSON.parse(localStorage.getItem('bp-quiz'));
+      if (savedQuiz && savedQuiz.length === 5) {
+        quizAnswers = savedQuiz;
+        document.querySelectorAll('.quiz-item').forEach(function(row) {
+          var idx = parseInt(row.getAttribute('data-index'));
+          var ans = quizAnswers[idx];
+          if (ans === null) return;
+          var btns = row.querySelectorAll('.quiz-btn');
+          btns[0].className = 'quiz-btn' + (ans  ? ' selected-yes' : '');
+          btns[1].className = 'quiz-btn' + (!ans ? ' selected-no'  : '');
+          row.classList.toggle('answered-yes', ans);
+          row.classList.toggle('answered-no', !ans);
+        });
+        updateQuizScore();
+      }
+    } catch(e) {}
+  })();
+</script>
+
+</body>
+</html>

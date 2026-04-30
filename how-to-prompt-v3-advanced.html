@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Prompt · Video 3 · Advanced Moves</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:        #F5EFE0;
+      --cream-dark:   #EDE4CE;
+      --navy:         #1E2B4A;
+      --navy-mid:     #2D3F6B;
+      --lavender:     #9B8EC4;
+      --lavender-lt:  #C8C0E2;
+      --lavender-bg:  #EAE6F5;
+      --teal:         #7BBFB0;
+      --teal-lt:      #A8D5CC;
+      --teal-bg:      #E2F2EF;
+      --peach:        #E8A882;
+      --peach-lt:     #F2C9AE;
+      --peach-bg:     #FAF0E8;
+      --gold:         #D4A843;
+      --gold-lt:      #E8C87A;
+      --gold-bg:      #FBF3DC;
+      --text:         #1E2B4A;
+      --text-mid:     #4A5568;
+      --text-light:   #8896A8;
+      --border:       #D8CEBC;
+      --white:        #FFFFFF;
+      --shadow-sm:    0 1px 4px rgba(30,43,74,0.08);
+      --radius:       12px;
+      --radius-sm:    8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+    button { cursor: pointer; font-family: inherit; border: none; }
+
+    .site-header { background: var(--navy); padding: 48px 40px 44px; position: relative; overflow: hidden; }
+    .site-header::before { content: ''; position: absolute; top: -60px; right: -40px; width: 260px; height: 260px; border-radius: 50%; background: var(--peach); opacity: 0.16; }
+    .site-header::after { content: ''; position: absolute; bottom: -40px; right: 200px; width: 150px; height: 150px; border-radius: 50%; background: var(--lavender); opacity: 0.18; }
+    .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+    .series-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-weight: 600; }
+    .site-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(38px, 5.5vw, 58px); font-weight: 900; color: var(--white); line-height: 1.05; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .site-title span { color: var(--teal-lt); }
+    .site-subtitle { font-size: 15px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+    .intro-strip { background: var(--lavender-bg); border-bottom: 2px solid var(--lavender-lt); padding: 16px 40px; }
+    .intro-strip p { max-width: 960px; margin: 0 auto; font-size: 14px; color: var(--text-mid); }
+
+    main { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .section-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-light); margin-bottom: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* MOVE CARDS — alternating color headers */
+    .moves-section { margin-bottom: 64px; }
+    .move-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .move-header { padding: 22px 26px; display: flex; align-items: flex-start; gap: 18px; }
+    .move-card:nth-child(2) .move-header { background: var(--teal); }
+    .move-card:nth-child(3) .move-header { background: var(--lavender); }
+    .move-card:nth-child(4) .move-header { background: var(--peach); }
+    .move-card:nth-child(5) .move-header { background: var(--navy-mid); }
+    .move-num { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); color: var(--white); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .move-title { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: var(--white); font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+    .move-subtitle { font-size: 12.5px; color: rgba(255,255,255,0.65); font-style: italic; }
+    .move-body { background: var(--white); padding: 26px; }
+    .move-insight { font-size: 14px; color: var(--text-mid); line-height: 1.65; margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+    .move-insight strong { color: var(--text); }
+
+    /* PROMPT TEMPLATE */
+    .prompt-wrap { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 14px; }
+    .prompt-header { background: var(--navy); padding: 10px 16px; }
+    .prompt-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .prompt-body { padding: 16px; }
+    .prompt-text { font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+    .copy-btn { background: var(--lavender); color: var(--white); border: none; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: background 0.18s; margin-top: 12px; }
+    .copy-btn:hover { background: var(--navy-mid); }
+    .copy-btn.copied { background: var(--teal); }
+
+    .note-box { background: var(--gold-bg); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 16px; font-size: 13px; color: var(--text-mid); line-height: 1.55; }
+    .note-box strong { color: var(--text); }
+
+    /* CHAIN COMPARE */
+    .chain-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: start; margin-bottom: 18px; }
+    @media (max-width: 640px) { .chain-compare { grid-template-columns: 1fr; } .chain-arrow { margin: 0 auto; } }
+    .chain-col-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600; color: var(--text-light); margin-bottom: 8px; }
+    .chain-col.good .chain-col-label { color: var(--peach); }
+    .chain-block { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; font-size: 13px; color: var(--text-mid); line-height: 1.5; font-style: italic; }
+    .chain-col.good .chain-block { background: var(--peach-bg); border-color: var(--peach-lt); font-style: normal; }
+    .chain-steps { display: flex; flex-direction: column; gap: 8px; }
+    .chain-step { display: flex; gap: 10px; align-items: flex-start; }
+    .chain-step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--peach); color: var(--white); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .chain-step-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .chain-arrow { display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 22px; padding-top: 28px; }
+
+    /* FULL STACK */
+    .fullstack-section { margin-bottom: 64px; }
+    .fullstack-block { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .fullstack-header { background: var(--navy); padding: 22px 26px; position: relative; overflow: hidden; }
+    .fullstack-header::before { content: ''; position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; border-radius: 50%; background: var(--teal); opacity: 0.2; }
+    .fullstack-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal-lt); margin-bottom: 6px; font-weight: 600; position: relative; }
+    .fullstack-title { font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--white); font-weight: 700; position: relative; }
+    .fullstack-body { padding: 26px; }
+    .fullstack-priority { background: var(--lavender-bg); border: 1px solid var(--lavender-lt); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 24px; }
+    .fullstack-priority-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lavender); margin-bottom: 10px; font-weight: 600; }
+    .fullstack-priority-items { display: flex; flex-direction: column; gap: 6px; }
+    .fullstack-priority-item { font-size: 14.5px; color: var(--text); display: flex; gap: 8px; }
+    .fullstack-priority-item::before { content: '→'; color: var(--lavender); flex-shrink: 0; font-weight: 600; }
+    .fullstack-list { display: flex; flex-direction: column; gap: 0; }
+    .fullstack-item { font-size: 13.5px; color: var(--text-mid); line-height: 1.55; padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; gap: 10px; }
+    .fullstack-item:last-child { border-bottom: none; }
+    .fullstack-item::before { content: '·'; color: var(--teal); font-size: 22px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+
+    /* TODAY */
+    .today-section { margin-bottom: 64px; }
+    .today-block { background: var(--navy); border-radius: var(--radius); padding: 36px 40px; position: relative; overflow: hidden; }
+    .today-block::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: var(--teal); opacity: 0.14; }
+    .today-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--teal-lt); margin-bottom: 10px; font-weight: 600; position: relative; }
+    .today-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: var(--white); font-weight: 700; margin-bottom: 22px; line-height: 1.3; position: relative; }
+    .today-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; position: relative; }
+    .today-step { display: flex; align-items: flex-start; gap: 14px; }
+    .today-num { width: 24px; height: 24px; border-radius: 50%; background: var(--teal); color: var(--navy); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .today-step span { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+
+    /* REFLECTION */
+    .reflection-section { margin-bottom: 64px; }
+    .reflection-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
+    .reflection-nudge { font-size: 15px; color: var(--text-mid); font-style: italic; line-height: 1.65; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .reflection-area { width: 100%; min-height: 96px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); resize: vertical; line-height: 1.55; outline: none; transition: border-color 0.2s; }
+    .reflection-area:focus { border-color: var(--lavender); }
+    .reflection-area::placeholder { color: var(--text-light); font-style: italic; }
+
+    /* HERO */
+    .hero-closer { background: var(--navy); border-radius: var(--radius); padding: 52px 44px; text-align: center; position: relative; overflow: hidden; }
+    .hero-closer::before { content: ''; position: absolute; bottom: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: var(--peach); opacity: 0.14; }
+    .hero-closer::after { content: ''; position: absolute; top: -40px; left: -40px; width: 180px; height: 180px; border-radius: 50%; background: var(--teal); opacity: 0.16; }
+    .hero-closer-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; font-weight: 600; position: relative; }
+    .hero-closer-text { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(26px, 4vw, 40px); color: var(--white); line-height: 1.2; font-weight: 900; position: relative; }
+    .hero-closer-text em { color: var(--teal-lt); font-style: italic; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="series-tag">Blueprint AI Workshop · How to Prompt · Video 3 of 3</div>
+    <h1 class="site-title">Raise the <span>Ceiling.</span></h1>
+    <p class="site-subtitle">Push Back · Interview First · Chaining · Rewrite Your Prompt</p>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <p>Videos 1 and 2 make you effective. This video is different — this is where the tool starts doing things you didn't expect. Use this handout after watching Video 3.</p>
+</div>
+
+<main>
+
+  <div class="moves-section">
+    <div class="section-label">The four advanced moves</div>
+
+    <!-- MOVE 5 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">5</div>
+        <div>
+          <div class="move-title">Ask It to Push Back</div>
+          <div class="move-subtitle">The move most people never think to make</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> AI models are trained to be helpful and agreeable. Left to their own devices, they'll validate your plan. You have to explicitly ask for disagreement — the model won't volunteer it. The pre-mortem forces a specific story about failure, not a risk list. That story is almost always more useful. One round of forced dissent before you ship is worth more than three rounds of revision after.
+        </div>
+        <div class="prompt-wrap" style="margin-bottom: 14px;">
+          <div class="prompt-header"><span class="prompt-label">Steel-man critique</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-pushback">What's wrong with this plan? Steel-man the strongest objections. Don't hedge — I want the real critique.</pre>
+            <button class="copy-btn" id="cb-pushback" onclick="copyPrompt('p-pushback','cb-pushback')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Pre-mortem — use before you ship</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-premortem">Imagine it's six months from now and this failed. Write the post-mortem. What went wrong, and why?</pre>
+            <button class="copy-btn" id="cb-premortem" onclick="copyPrompt('p-premortem','cb-premortem')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 6 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">6</div>
+        <div>
+          <div class="move-title">Ask It to Interview You First</div>
+          <div class="move-subtitle">Flip the relationship — let it surface the gaps you didn't know you had</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> When you write prompts cold, you under-specify. The model fills gaps with averages. The output is fine-but-generic. Flip it — ask the model what it needs to know first. This reverses the expected relationship. You came with a task; now it's asking you questions. <strong>That reversal is exactly the point.</strong>
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Template — interview mode</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-interview">Before you write this, ask me the five most important questions you'd need answered to do this well. Wait for my answers before producing anything.</pre>
+            <button class="copy-btn" id="cb-interview" onclick="copyPrompt('p-interview','cb-interview')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+        <div class="note-box" style="margin-top: 14px;"><strong>When to use it:</strong> Any nontrivial task — a document, a strategic question, a complex piece of content. Not for quick lookups.</div>
+      </div>
+    </div>
+
+    <!-- MOVE 7 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">7</div>
+        <div>
+          <div class="move-title">Decompose Big Asks Into Chains</div>
+          <div class="move-subtitle">One prompt, one job</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> Most people write kitchen-sink prompts. The model quietly drops two jobs, or satisfies all four shallowly. A mega-prompt gives you bad output with no indication of where it went wrong. Think of prompts like functions — when something breaks in a chain, you find exactly which step failed. If your prompt has more than 2–3 distinct responsibilities, break it up.
+        </div>
+        <div class="chain-compare">
+          <div class="chain-col">
+            <div class="chain-col-label">Instead of this</div>
+            <div class="chain-block">"Summarize this document, identify the three key themes, rewrite it for a non-expert audience, and format everything as a table."</div>
+          </div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-col good">
+            <div class="chain-col-label">Chain these</div>
+            <div class="chain-steps">
+              <div class="chain-step"><div class="chain-step-num">1</div><div class="chain-step-text">Summarize this document in five bullets.</div></div>
+              <div class="chain-step"><div class="chain-step-num">2</div><div class="chain-step-text">Based on that summary, what are the three key themes? One sentence each.</div></div>
+              <div class="chain-step"><div class="chain-step-num">3</div><div class="chain-step-text">Rewrite bullet 2 for someone with no background in this topic. Plain language, no jargon.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOVE 8 -->
+    <div class="move-card">
+      <div class="move-header">
+        <div class="move-num">8</div>
+        <div>
+          <div class="move-title">Ask It to Rewrite Your Prompt</div>
+          <div class="move-subtitle">When a prompt has frustrated you 2–3 times — hand it back first</div>
+        </div>
+      </div>
+      <div class="move-body">
+        <div class="move-insight">
+          <strong>The key insight:</strong> We write prompts in our own head-voice, with assumptions baked in that the model doesn't share. When you hand the prompt back, it adds specificity you didn't think to include, tightens the task statement, and surfaces structural problems. Both Anthropic and OpenAI ship dedicated prompt-generator tools because this pattern is that reliable.
+        </div>
+        <div class="prompt-wrap">
+          <div class="prompt-header"><span class="prompt-label">Template — hand it back</span></div>
+          <div class="prompt-body">
+            <pre class="prompt-text" id="p-rewrite">Here's my prompt: [paste your prompt]. Rewrite it to get a better result from you. Tell me what you changed and why.</pre>
+            <button class="copy-btn" id="cb-rewrite" onclick="copyPrompt('p-rewrite','cb-rewrite')">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>Copy template
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL STACK -->
+  <div class="fullstack-section">
+    <div class="section-label">The complete full stack</div>
+    <div class="fullstack-block">
+      <div class="fullstack-header">
+        <div class="fullstack-eyebrow">Save This</div>
+        <div class="fullstack-title">If you take nothing else from this series, take these.</div>
+      </div>
+      <div class="fullstack-body">
+        <div class="fullstack-priority">
+          <div class="fullstack-priority-label">Do these first</div>
+          <div class="fullstack-priority-items">
+            <div class="fullstack-priority-item">Audience + options + critique loop (Video 2)</div>
+            <div class="fullstack-priority-item">Push back + interview first (Video 3)</div>
+          </div>
+        </div>
+        <div class="fullstack-list">
+          <div class="fullstack-item">Start with anatomy: Role, Context, Task, Format.</div>
+          <div class="fullstack-item">Get specific about the audience — not just "a student" but who they are, what they know, what they need.</div>
+          <div class="fullstack-item">Show it what good looks like — paste examples. Examples override instructions.</div>
+          <div class="fullstack-item">Before committing, ask for five distinctly different options. Pick, then execute.</div>
+          <div class="fullstack-item">On complex tasks, ask it to interview you first before writing anything.</div>
+          <div class="fullstack-item">Break complex asks into chains. One prompt, one job.</div>
+          <div class="fullstack-item">Run a critique loop before accepting substantial output. Name the adversarial persona.</div>
+          <div class="fullstack-item">Ask it to push back. Use the pre-mortem before you ship anything important.</div>
+          <div class="fullstack-item">When stuck, hand the prompt back and ask for a better version.</div>
+          <div class="fullstack-item">Stay in the same conversation when iterating. The context is worth more than a fresh start.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODAY -->
+  <div class="today-section">
+    <div class="section-label">Do this today</div>
+    <div class="today-block">
+      <div class="today-eyebrow">Try It</div>
+      <div class="today-headline">Take something you're about to send, decide, or build. Run it through one of the advanced moves before you ship it.</div>
+      <ul class="today-steps">
+        <li class="today-step"><span class="today-num">1</span><span>Pick something real — a plan, a doc, a message you're about to finalize.</span></li>
+        <li class="today-step"><span class="today-num">2</span><span>If it's a plan or decision: run the pre-mortem prompt. See what story it tells about failure.</span></li>
+        <li class="today-step"><span class="today-num">3</span><span>If it's a document you haven't started: use "interview first" before you write anything.</span></li>
+        <li class="today-step"><span class="today-num">4</span><span>If a prompt has been frustrating you: hand it back and ask for a rewrite. Notice what it changes.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REFLECTION -->
+  <div class="reflection-section">
+    <div class="section-label">Reflect</div>
+    <div class="reflection-card">
+      <div class="reflection-nudge">The goal isn't to become a better prompt writer — it's to build systems that do it for you. What's one recurring task in your work where you're currently prompting manually every time? What would it take to stop doing that?</div>
+      <textarea class="reflection-area" id="reflectArea" placeholder="Write here — your notes stay in this tab..." oninput="saveReflection()"></textarea>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero-closer">
+    <div class="hero-closer-eyebrow">If you remember nothing else from this video</div>
+    <div class="hero-closer-text">Push back on your own ideas.<br>Ask it to <em>interview you.</em><br>The ceiling goes up.</div>
+  </div>
+
+</main>
+
+<script>
+  function copyPrompt(preId, btnId) {
+    var text = document.getElementById(preId).textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.getElementById(btnId), orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(function() {
+      var ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
+  function saveReflection() { try { localStorage.setItem('bp-p3-reflect', document.getElementById('reflectArea').value); } catch(e) {} }
+  (function() { try { var s = localStorage.getItem('bp-p3-reflect'); if (s) document.getElementById('reflectArea').value = s; } catch(e) {} })();
+</script>
+</body>
+</html>

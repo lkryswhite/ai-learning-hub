@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Prompt · Video 1 · The Foundation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:        #F5EFE0;
+      --cream-dark:   #EDE4CE;
+      --navy:         #1E2B4A;
+      --navy-mid:     #2D3F6B;
+      --lavender:     #9B8EC4;
+      --lavender-lt:  #C8C0E2;
+      --lavender-bg:  #EAE6F5;
+      --teal:         #7BBFB0;
+      --teal-lt:      #A8D5CC;
+      --teal-bg:      #E2F2EF;
+      --peach:        #E8A882;
+      --peach-lt:     #F2C9AE;
+      --peach-bg:     #FAF0E8;
+      --gold:         #D4A843;
+      --gold-lt:      #E8C87A;
+      --gold-bg:      #FBF3DC;
+      --text:         #1E2B4A;
+      --text-mid:     #4A5568;
+      --text-light:   #8896A8;
+      --border:       #D8CEBC;
+      --white:        #FFFFFF;
+      --shadow-sm:    0 1px 4px rgba(30,43,74,0.08);
+      --shadow-md:    0 4px 20px rgba(30,43,74,0.12);
+      --radius:       12px;
+      --radius-sm:    8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--cream); color: var(--text); line-height: 1.6; }
+    button { cursor: pointer; font-family: inherit; border: none; }
+
+    .site-header {
+      background: var(--navy);
+      padding: 48px 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: ''; position: absolute; top: -60px; right: -60px;
+      width: 280px; height: 280px; border-radius: 50%;
+      background: var(--lavender); opacity: 0.18;
+    }
+    .site-header::after {
+      content: ''; position: absolute; bottom: -30px; right: 140px;
+      width: 130px; height: 130px; border-radius: 50%;
+      background: var(--peach); opacity: 0.22;
+    }
+    .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+    .series-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-weight: 600; }
+    .site-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(38px, 5.5vw, 60px); font-weight: 900; color: var(--white); line-height: 1.05; margin-bottom: 10px; letter-spacing: -0.02em; }
+    .site-title span { color: var(--peach); }
+    .site-subtitle { font-size: 15px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+    .intro-strip { background: var(--teal-bg); border-bottom: 2px solid var(--teal-lt); padding: 16px 40px; }
+    .intro-strip p { max-width: 960px; margin: 0 auto; font-size: 14px; color: var(--text-mid); }
+
+    main { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+
+    .section-label {
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-light); margin-bottom: 22px; font-weight: 600;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* REFRAME */
+    .reframe-block {
+      background: var(--navy); border-radius: var(--radius);
+      padding: 44px 48px; margin-bottom: 64px;
+      position: relative; overflow: hidden;
+    }
+    .reframe-block::before {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: var(--lavender); opacity: 0.15;
+    }
+    .reframe-block::after {
+      content: ''; position: absolute; bottom: -20px; right: 100px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--teal); opacity: 0.2;
+    }
+    .reframe-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--peach); margin-bottom: 14px; font-weight: 600; position: relative; }
+    .reframe-headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(22px, 3vw, 32px); color: var(--white); line-height: 1.25; margin-bottom: 28px; font-weight: 700; position: relative; }
+    .reframe-headline em { color: var(--peach); font-style: normal; }
+    .reframe-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; position: relative; }
+    @media (max-width: 560px) { .reframe-cols { grid-template-columns: 1fr; } }
+    .reframe-col { border-radius: var(--radius-sm); padding: 18px 20px; }
+    .reframe-col.left { background: rgba(255,255,255,0.07); }
+    .reframe-col.right { background: rgba(123,191,176,0.2); }
+    .reframe-col-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 8px; font-weight: 600; }
+    .reframe-col.right .reframe-col-label { color: var(--teal-lt); }
+    .reframe-col-text { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.55; }
+    .reframe-col.right .reframe-col-text { color: rgba(255,255,255,0.9); }
+
+    /* ANATOMY */
+    .anatomy-section { margin-bottom: 64px; }
+    .anatomy-table { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .anatomy-table thead tr { background: var(--navy); }
+    .anatomy-table thead th { padding: 14px 20px; text-align: left; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .anatomy-table thead th:first-child { color: var(--peach); }
+    .anatomy-table tbody tr { background: var(--white); }
+    .anatomy-table tbody tr:nth-child(even) { background: #FAFAF8; }
+    .anatomy-table tbody tr:hover { background: var(--lavender-bg); }
+    .anatomy-table td { padding: 16px 20px; font-size: 13.5px; vertical-align: top; line-height: 1.55; border-top: 1px solid var(--border); }
+    .anatomy-table td:first-child { font-weight: 700; color: var(--lavender); font-size: 12px; letter-spacing: 0.04em; white-space: nowrap; }
+    .anatomy-table td:nth-child(2) { color: var(--text-mid); }
+    .anatomy-table td:nth-child(3) { font-style: italic; color: var(--text-light); font-size: 13px; }
+    .golden-rule { margin-top: 18px; background: var(--gold-bg); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 14px 18px; font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+    .golden-rule strong { color: var(--text); }
+
+    /* ITERATION */
+    .iteration-section { margin-bottom: 64px; }
+    .iter-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 28px; }
+    @media (max-width: 680px) { .iter-cards { grid-template-columns: 1fr; } }
+    .iter-card { border-radius: var(--radius); padding: 22px; }
+    .iter-card:nth-child(1) { background: var(--lavender-bg); }
+    .iter-card:nth-child(2) { background: var(--teal-bg); }
+    .iter-card:nth-child(3) { background: var(--peach-bg); }
+    .iter-num { width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; color: var(--white); }
+    .iter-card:nth-child(1) .iter-num { background: var(--lavender); }
+    .iter-card:nth-child(2) .iter-num { background: var(--teal); }
+    .iter-card:nth-child(3) .iter-num { background: var(--peach); }
+    .iter-title { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .iter-desc { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+    .iter-example { margin-top: 10px; font-size: 12.5px; font-style: italic; color: var(--text-light); line-height: 1.5; padding-top: 10px; border-top: 1px solid rgba(30,43,74,0.1); }
+
+    .negation-box { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--shadow-sm); }
+    .negation-title { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); margin-bottom: 14px; font-weight: 600; }
+    .negation-row { display: grid; grid-template-columns: 1fr 32px 1fr; gap: 10px; align-items: center; }
+    @media (max-width: 520px) { .negation-row { grid-template-columns: 1fr; } }
+    .neg-pill { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13.5px; line-height: 1.4; }
+    .neg-pill.bad { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; text-decoration: line-through; }
+    .neg-pill.good { background: var(--teal-bg); border: 1px solid var(--teal-lt); color: #1A5C52; }
+    .neg-arrow { text-align: center; color: var(--text-light); font-size: 18px; font-weight: bold; }
+    .negation-note { font-size: 12.5px; color: var(--text-light); margin-top: 12px; font-style: italic; }
+
+    .prompt-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+    .prompt-header { background: var(--navy); padding: 10px 18px; }
+    .prompt-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.45); font-weight: 600; }
+    .prompt-body { padding: 18px; }
+    .prompt-text { font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; color: var(--text); white-space: pre-wrap; word-break: break-word; }
+    .copy-btn { background: var(--lavender); color: var(--white); border: none; padding: 9px 16px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; transition: background 0.18s; margin-top: 14px; }
+    .copy-btn:hover { background: var(--navy-mid); }
+    .copy-btn.copied { background: var(--teal); }
+
+    .context-note { background: var(--cream-dark); border-radius: var(--radius-sm); padding: 14px 18px; font-size: 13.5px; color: var(--text-mid); line-height: 1.6; }
+    .context-note strong { color: var(--text); }
+
+    /* TODAY */
+    .today-section { margin-bottom: 64px; }
+    .today-block { background: var(--navy); border-radius: var(--radius); padding: 36px 40px; position: relative; overflow: hidden; }
+    .today-block::before { content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; border-radius: 50%; background: var(--gold); opacity: 0.12; }
+    .today-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 10px; font-weight: 600; position: relative; }
+    .today-headline { font-family: 'Playfair Display', Georgia, serif; font-size: 20px; color: var(--white); font-weight: 700; margin-bottom: 22px; line-height: 1.3; position: relative; }
+    .today-steps { list-style: none; display: flex; flex-direction: column; gap: 12px; position: relative; }
+    .today-step { display: flex; align-items: flex-start; gap: 14px; }
+    .today-num { width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--navy); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .today-step span { font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+
+    /* REFLECTION */
+    .reflection-section { margin-bottom: 64px; }
+    .reflection-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-sm); }
+    .reflection-nudge { font-size: 15px; color: var(--text-mid); font-style: italic; line-height: 1.65; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+    .reflection-area { width: 100%; min-height: 96px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); resize: vertical; line-height: 1.55; outline: none; transition: border-color 0.2s; }
+    .reflection-area:focus { border-color: var(--lavender); }
+    .reflection-area::placeholder { color: var(--text-light); font-style: italic; }
+
+    /* HERO CLOSER */
+    .hero-closer { background: var(--navy); border-radius: var(--radius); padding: 52px 44px; text-align: center; position: relative; overflow: hidden; }
+    .hero-closer::before { content: ''; position: absolute; bottom: -60px; left: -60px; width: 260px; height: 260px; border-radius: 50%; background: var(--lavender); opacity: 0.15; }
+    .hero-closer::after { content: ''; position: absolute; top: -30px; right: -30px; width: 160px; height: 160px; border-radius: 50%; background: var(--teal); opacity: 0.18; }
+    .hero-closer-eyebrow { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 14px; font-weight: 600; position: relative; }
+    .hero-closer-text { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(28px, 4.5vw, 44px); color: var(--white); line-height: 1.2; font-weight: 900; position: relative; }
+    .hero-closer-text em { color: var(--peach); font-style: italic; }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="series-tag">Blueprint AI Workshop · How to Prompt · Video 1 of 3</div>
+    <h1 class="site-title">The <span>Foundation.</span></h1>
+    <p class="site-subtitle">Reframe · Honesty · Anatomy · Iteration</p>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <p>Use this after watching Video 1. It covers the four concepts from the session — reference it any time a prompt isn't landing.</p>
+</div>
+
+<main>
+
+  <div class="section-label">The reframe</div>
+  <div class="reframe-block">
+    <div class="reframe-eyebrow">The core idea</div>
+    <div class="reframe-headline">Most people treat it like a search engine.<br>It's not. It's a contractor <em>you're briefing.</em></div>
+    <div class="reframe-cols">
+      <div class="reframe-col left">
+        <div class="reframe-col-label">Search engine</div>
+        <div class="reframe-col-text">Retrieves what already exists. Vague input is fine — it filters for you.</div>
+      </div>
+      <div class="reframe-col right">
+        <div class="reframe-col-label">Contractor</div>
+        <div class="reframe-col-text">Executes what you spec. Vague input produces average output. The brief is everything.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="anatomy-section" style="margin-top: 64px;">
+    <div class="section-label">Anatomy of a good prompt</div>
+    <table class="anatomy-table">
+      <thead>
+        <tr>
+          <th>Component</th><th>What it does</th><th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Role / Audience</td>
+          <td>Sets the lens — who's writing AND who's reading. Audience spec does more work than role alone.</td>
+          <td>"Write for a pre-med junior two weeks from their exam who finds biochemistry intimidating. Plain language, no assumed knowledge."</td>
+        </tr>
+        <tr>
+          <td>Context</td>
+          <td>Gives background it doesn't have. Lead with task, support with context.</td>
+          <td>"We're building a study guide for students 2 weeks from their exam who are overwhelmed and skimming."</td>
+        </tr>
+        <tr>
+          <td>Task</td>
+          <td>Tells it exactly what to do. Vague tasks get vague outputs.</td>
+          <td>"Write three explanations of cellular respiration at increasing difficulty levels."</td>
+        </tr>
+        <tr>
+          <td>Format</td>
+          <td>Defines what the output looks like — length, structure, tone.</td>
+          <td>"Bulleted list, under 100 words each, plain language, no jargon."</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="golden-rule">
+      <strong>The Golden Rule Test:</strong> Could a smart colleague with no background follow it without being confused? If they'd be confused, the model will be too. That check catches most bad prompts before they happen.
+    </div>
+  </div>
+
+  <div class="iteration-section">
+    <div class="section-label">When output misses: three moves</div>
+    <div class="iter-cards">
+      <div class="iter-card">
+        <div class="iter-num">1</div>
+        <div class="iter-title">Tell it what's wrong — specifically</div>
+        <div class="iter-desc">Name the actual problem. Vague feedback produces vague revision.</div>
+        <div class="iter-example">"This is too formal — rewrite it the way you'd explain it to a colleague over Slack."</div>
+      </div>
+      <div class="iter-card">
+        <div class="iter-num">2</div>
+        <div class="iter-title">Add a constraint</div>
+        <div class="iter-desc">Give it a hard rule to work within.</div>
+        <div class="iter-example">"Keep this under 50 words." / "No bullet points — write it as a single paragraph."</div>
+      </div>
+      <div class="iter-card">
+        <div class="iter-num">3</div>
+        <div class="iter-title">Show it what good looks like</div>
+        <div class="iter-desc">Paste an example. The model mimics what it sees more reliably than instructions.</div>
+        <div class="iter-example">"Here's the style I'm going for: [paste]. Write mine the same way but for [your use case]."</div>
+      </div>
+    </div>
+
+    <div class="negation-box">
+      <div class="negation-title">Key nuance — replace "don't" with "do"</div>
+      <div class="negation-row">
+        <div class="neg-pill bad">"Don't be verbose."</div>
+        <div class="neg-arrow">→</div>
+        <div class="neg-pill good">"Write concisely — under 150 words."</div>
+      </div>
+      <div class="negation-note">Negation fails reliably. Positive constraints almost always work better.</div>
+    </div>
+
+    <div class="section-label" style="margin-top: 44px;">The iteration template</div>
+    <div class="prompt-wrap">
+      <div class="prompt-header"><span class="prompt-label">Steal this</span></div>
+      <div class="prompt-body">
+        <pre class="prompt-text" id="iter-template">Here's what I got: [paste output]. This is close but [specific problem — too formal / too long / missing X]. Can you revise it to [specific fix]? Keep [what to preserve].</pre>
+        <button class="copy-btn" id="copyBtn-iter" onclick="copyPrompt('iter-template','copyBtn-iter')">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          Copy template
+        </button>
+      </div>
+    </div>
+
+    <div class="context-note">
+      <strong>Stay in the same conversation.</strong> Expert users expect 3–8 turns of refinement on any nontrivial task. The accumulated context is worth more than anything you'd type fresh. When threads get very long and quality degrades: ask it to summarize → open a new chat → paste the summary.
+    </div>
+  </div>
+
+  <div class="today-section">
+    <div class="section-label">Do this today</div>
+    <div class="today-block">
+      <div class="today-eyebrow">Try It</div>
+      <div class="today-headline">Take one prompt you've used in the last week. Rebuild it using the four-component anatomy.</div>
+      <ul class="today-steps">
+        <li class="today-step"><span class="today-num">1</span><span>Write out who's actually reading the output — specifically, not just "a student" or "my manager."</span></li>
+        <li class="today-step"><span class="today-num">2</span><span>Check your original prompt against Role/Audience, Context, Task, Format. Which one is missing?</span></li>
+        <li class="today-step"><span class="today-num">3</span><span>Add it. Run the prompt. Compare what you get now to what you got before.</span></li>
+        <li class="today-step"><span class="today-num">4</span><span>If the first output still misses, use one of the three iteration moves — don't rewrite from scratch.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="reflection-section">
+    <div class="section-label">Reflect</div>
+    <div class="reflection-card">
+      <div class="reflection-nudge">Think of a task you've tried with AI that didn't work well. Which of the four components — Role/Audience, Context, Task, or Format — was weakest in your prompt? What would you add now?</div>
+      <textarea class="reflection-area" id="reflectArea" placeholder="Write here — your notes stay in this tab..." oninput="saveReflection()"></textarea>
+    </div>
+  </div>
+
+  <div class="hero-closer">
+    <div class="hero-closer-eyebrow">If you remember nothing else from this video</div>
+    <div class="hero-closer-text">The first output is a draft.<br><em>Talk back to it.</em></div>
+  </div>
+
+</main>
+
+<script>
+  function copyPrompt(preId, btnId) {
+    var text = document.getElementById(preId).textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = document.getElementById(btnId), orig = btn.innerHTML;
+      btn.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+    }).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+  }
+  function saveReflection() { try { localStorage.setItem('bp-p1-reflect', document.getElementById('reflectArea').value); } catch(e) {} }
+  (function() { try { var s = localStorage.getItem('bp-p1-reflect'); if (s) document.getElementById('reflectArea').value = s; } catch(e) {} })();
+</script>
+</body>
+</html>
