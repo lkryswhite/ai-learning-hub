@@ -4,118 +4,95 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI for Task Management — Blueprint</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
+  /* ── TOKENS ── */
   :root {
-    --bp-navy: #0f2a4a;
-    --bp-blue: #1a6fa8;
-    --bp-sky: #3fa0d0;
-    --bp-light: #e8f4fb;
-    --bp-pale: #f4f9fd;
-    --bp-accent: #00b4d8;
-    --bp-warm: #f0f6ff;
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
-    --text-muted: #9ca3af;
-    --border: #e2ecf5;
-    --white: #ffffff;
-    --shadow-sm: 0 1px 3px rgba(15,42,74,0.06), 0 1px 2px rgba(15,42,74,0.04);
-    --shadow-md: 0 4px 16px rgba(15,42,74,0.08), 0 2px 6px rgba(15,42,74,0.05);
-    --shadow-lg: 0 12px 40px rgba(15,42,74,0.12);
-    --radius: 14px;
+    --cream:        #F5EFE0;
+    --cream-dark:   #EDE4CE;
+    --navy:         #1E2B4A;
+    --navy-mid:     #2D3F6B;
+    --lavender:     #9B8EC4;
+    --lavender-lt:  #C8C0E2;
+    --lavender-bg:  #EAE6F5;
+    --teal:         #7BBFB0;
+    --teal-lt:      #A8D5CC;
+    --teal-bg:      #E2F2EF;
+    --peach:        #E8A882;
+    --peach-lt:     #F2C9AE;
+    --peach-bg:     #FAF0E8;
+    --gold:         #D4A843;
+    --gold-lt:      #E8C87A;
+    --gold-bg:      #FBF3DC;
+    --text:         #1E2B4A;
+    --text-mid:     #4A5568;
+    --text-light:   #8896A8;
+    --border:       #D8CEBC;
+    --white:        #FFFFFF;
+    --shadow-sm:    0 1px 4px rgba(30,43,74,0.08);
+    --shadow-md:    0 4px 20px rgba(30,43,74,0.12);
+    --shadow-lg:    0 8px 40px rgba(30,43,74,0.18);
+    --radius:       12px;
+    --radius-sm:    8px;
   }
 
+  /* ── RESET ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bp-pale);
-    color: var(--text-primary);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--text);
     line-height: 1.6;
-    font-size: 15px;
+    min-height: 100vh;
   }
+  button { cursor: pointer; font-family: inherit; border: none; }
 
   /* ── HEADER ── */
   .site-header {
-    background: linear-gradient(135deg, var(--bp-navy) 0%, #1a3d6e 60%, var(--bp-blue) 100%);
-    padding: 48px 0 40px;
+    background: var(--navy);
+    padding: 48px 40px 44px;
     position: relative;
     overflow: hidden;
   }
   .site-header::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(63,160,208,0.18) 0%, transparent 70%);
-    border-radius: 50%;
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: var(--peach); opacity: 0.18;
   }
   .site-header::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; left: 10%;
-    width: 400px; height: 200px;
-    background: radial-gradient(ellipse, rgba(0,180,216,0.1) 0%, transparent 70%);
+    content: ''; position: absolute; bottom: -30px; right: 140px;
+    width: 130px; height: 130px; border-radius: 50%;
+    background: var(--lavender); opacity: 0.22;
   }
-  .header-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 32px;
-    position: relative;
-    z-index: 1;
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    text-decoration: none; margin-bottom: 18px; transition: color 0.15s;
   }
-  .logo-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-  }
-  .logo-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 40px;
-    padding: 8px 18px 8px 10px;
-  }
-  .logo-icon {
-    width: 32px; height: 32px;
-    background: var(--white);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .logo-icon svg { width: 20px; height: 20px; }
-  .logo-text {
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.9);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
+  .back-link:hover { color: rgba(255,255,255,0.85); }
   .series-tag {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--bp-accent);
-    background: rgba(0,180,216,0.15);
-    border: 1px solid rgba(0,180,216,0.25);
-    border-radius: 20px;
-    padding: 5px 14px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--peach); margin-bottom: 16px; font-weight: 600;
   }
-  .header-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 5vw, 52px);
-    color: var(--white);
-    line-height: 1.1;
-    margin-bottom: 14px;
+  .site-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(38px, 5.5vw, 60px); font-weight: 900;
+    color: var(--white); line-height: 1.05; margin-bottom: 10px;
+    letter-spacing: -0.02em;
   }
-  .header-subtitle {
-    font-size: 16px;
-    color: rgba(255,255,255,0.65);
-    max-width: 520px;
-    line-height: 1.6;
+  .site-subtitle { font-size: 15px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+  /* ── INTRO STRIP ── */
+  .intro-strip {
+    background: var(--peach-bg);
+    border-bottom: 2px solid var(--peach-lt);
+    padding: 16px 40px;
+  }
+  .intro-strip p {
+    max-width: 960px; margin: 0 auto;
+    font-size: 14px; color: var(--text-mid);
   }
 
   /* ── NAV ── */
@@ -123,13 +100,13 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255,255,255,0.95);
+    background: rgba(245,239,224,0.96);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
   }
   .nav-inner {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 32px;
     display: flex;
@@ -145,27 +122,27 @@
     padding: 14px 16px;
     font-size: 13px;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     text-decoration: none;
     white-space: nowrap;
     border-bottom: 2px solid transparent;
     transition: all 0.2s;
   }
-  .nav-link:hover { color: var(--bp-blue); }
-  .nav-link.active { color: var(--bp-blue); border-bottom-color: var(--bp-blue); }
+  .nav-link:hover { color: var(--peach); }
+  .nav-link.active { color: var(--peach); border-bottom-color: var(--peach); }
   .nav-num {
     width: 20px; height: 20px;
-    background: var(--bp-light);
+    background: var(--peach-bg);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 11px;
     font-weight: 600;
-    color: var(--bp-blue);
+    color: var(--peach);
   }
 
   /* ── MAIN ── */
   main {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 48px 32px 80px;
     display: flex;
@@ -185,23 +162,23 @@
   }
   .section-num {
     width: 40px; height: 40px; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--bp-blue), var(--bp-sky));
+    background: var(--peach);
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     font-size: 16px;
     font-weight: 700;
-    color: var(--white);
-    box-shadow: 0 4px 12px rgba(26,111,168,0.3);
+    color: var(--navy);
+    box-shadow: 0 4px 12px rgba(232,168,130,0.35);
   }
   .section-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 26px;
-    color: var(--bp-navy);
+    color: var(--navy);
   }
   .section-desc {
     margin-top: 4px;
     font-size: 13px;
-    color: var(--text-muted);
+    color: var(--text-light);
   }
 
   /* ── PROMPT GRID ── */
@@ -225,7 +202,7 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--bp-blue), var(--bp-accent));
+    background: linear-gradient(90deg, var(--peach), var(--peach-lt));
     opacity: 0;
     transition: opacity 0.2s;
   }
@@ -240,8 +217,8 @@
     gap: 6px;
     font-size: 11px;
     font-weight: 600;
-    color: var(--bp-blue);
-    background: var(--bp-light);
+    color: var(--peach);
+    background: var(--peach-bg);
     border-radius: 20px;
     padding: 4px 12px;
     margin-bottom: 14px;
@@ -251,29 +228,29 @@
   .prompt-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--bp-navy);
+    color: var(--navy);
     margin-bottom: 16px;
     line-height: 1.4;
   }
   .prompt-body {
-    background: var(--bp-pale);
+    background: var(--cream);
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 16px 18px;
     font-size: 13.5px;
     line-height: 1.7;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     font-family: 'DM Sans', sans-serif;
     position: relative;
   }
   .prompt-body strong {
-    color: var(--text-primary);
+    color: var(--text);
     font-weight: 600;
     display: block;
     margin-bottom: 4px;
   }
   .prompt-body .placeholder {
-    color: var(--bp-sky);
+    color: var(--peach);
     font-style: italic;
     font-weight: 500;
   }
@@ -290,7 +267,7 @@
     content: '→';
     position: absolute;
     left: 0;
-    color: var(--bp-accent);
+    color: var(--peach);
     font-size: 11px;
     top: 4px;
   }
@@ -301,16 +278,16 @@
     gap: 6px;
     font-size: 12px;
     font-weight: 500;
-    color: var(--bp-blue);
+    color: var(--peach);
     background: none;
-    border: 1px solid var(--bp-light);
+    border: 1px solid var(--peach-lt);
     border-radius: 8px;
     padding: 6px 14px;
     cursor: pointer;
     transition: all 0.15s;
   }
-  .copy-btn:hover { background: var(--bp-light); border-color: var(--bp-sky); }
-  .copy-btn.copied { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; }
+  .copy-btn:hover { background: var(--peach-bg); border-color: var(--peach); }
+  .copy-btn.copied { color: var(--teal); border-color: var(--teal-lt); background: var(--teal-bg); }
 
   /* ── WHEN TO USE ── */
   .criteria-grid {
@@ -337,20 +314,20 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 20px;
     margin-bottom: 14px;
-    background: var(--bp-light);
+    background: var(--peach-bg);
   }
   .criteria-card.negative .criteria-icon { background: #fef2f2; }
   .criteria-card-title {
     font-size: 15px;
     font-weight: 600;
-    color: var(--bp-navy);
+    color: var(--navy);
     margin-bottom: 10px;
     line-height: 1.4;
   }
   .criteria-sub {
     font-size: 12px;
     font-weight: 600;
-    color: var(--bp-blue);
+    color: var(--peach);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin-bottom: 6px;
@@ -359,7 +336,7 @@
   .criteria-card.negative .criteria-sub { color: #dc2626; }
   .criteria-body {
     font-size: 13.5px;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     line-height: 1.65;
   }
   .criteria-body ul {
@@ -385,21 +362,21 @@
   .criteria-note {
     margin-top: 10px;
     font-size: 12.5px;
-    color: var(--text-muted);
+    color: var(--text-light);
     font-style: italic;
     line-height: 1.5;
   }
 
   /* ── GUT CHECK ── */
   .gut-check {
-    background: linear-gradient(135deg, var(--bp-navy) 0%, #1a3d6e 100%);
+    background: var(--navy);
     border-radius: var(--radius);
     padding: 36px;
     color: var(--white);
     margin-top: 24px;
   }
   .gut-check h3 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 22px;
     margin-bottom: 6px;
     color: var(--white);
@@ -424,13 +401,13 @@
     gap: 10px;
   }
   .gut-yes {
-    background: rgba(34,197,94,0.15);
-    border: 1px solid rgba(34,197,94,0.3);
+    background: rgba(232,168,130,0.2);
+    border: 1px solid rgba(232,168,130,0.4);
     border-radius: 6px;
     padding: 2px 8px;
     font-size: 11px;
     font-weight: 700;
-    color: #4ade80;
+    color: var(--peach-lt);
     flex-shrink: 0;
     margin-top: 2px;
   }
@@ -460,7 +437,7 @@
   .tm-card-title {
     font-size: 13px;
     font-weight: 700;
-    color: var(--bp-blue);
+    color: var(--peach);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     margin-bottom: 14px;
@@ -476,7 +453,7 @@
   }
   .tm-body {
     font-size: 13.5px;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     line-height: 1.7;
   }
   .tm-body ul {
@@ -490,14 +467,14 @@
   .tm-body ul li::before {
     content: '·';
     position: absolute; left: 4px;
-    color: var(--bp-sky);
+    color: var(--peach);
     font-size: 18px;
     line-height: 1;
     top: 3px;
   }
   .tm-body .label {
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text);
   }
   .bucket-grid {
     display: grid;
@@ -506,12 +483,12 @@
     margin-top: 4px;
   }
   .bucket-item {
-    background: var(--bp-pale);
+    background: var(--cream);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 10px 14px;
     font-size: 13px;
-    color: var(--bp-navy);
+    color: var(--navy);
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -519,8 +496,8 @@
   }
   .bucket-num {
     width: 22px; height: 22px;
-    background: var(--bp-blue);
-    color: white;
+    background: var(--peach);
+    color: var(--navy);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 11px;
@@ -534,16 +511,16 @@
     margin-top: 4px;
   }
   .cmd-chip {
-    background: var(--bp-light);
-    border: 1px solid rgba(26,111,168,0.15);
-    color: var(--bp-navy);
+    background: var(--peach-bg);
+    border: 1px solid var(--peach-lt);
+    color: var(--navy);
     font-size: 12.5px;
     font-family: 'DM Sans', monospace;
     padding: 5px 12px;
     border-radius: 6px;
   }
   .taskmaster-prompt-box {
-    background: var(--bp-navy);
+    background: var(--navy);
     border-radius: var(--radius);
     padding: 32px;
     position: relative;
@@ -553,13 +530,13 @@
     content: '"';
     position: absolute;
     top: -20px; right: 20px;
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 160px;
     color: rgba(255,255,255,0.04);
     line-height: 1;
   }
   .taskmaster-prompt-box h3 {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 20px;
     color: var(--white);
     margin-bottom: 6px;
@@ -589,8 +566,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--bp-accent);
-    color: var(--white);
+    background: var(--peach);
+    color: var(--navy);
     border: none;
     border-radius: 10px;
     padding: 10px 22px;
@@ -601,32 +578,18 @@
     font-family: 'DM Sans', sans-serif;
   }
   .copy-prompt-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-  .copy-prompt-btn.copied { background: #16a34a; }
+  .copy-prompt-btn.copied { background: var(--teal); color: var(--white); }
 
   /* ── FOOTER ── */
-  footer {
-    background: var(--bp-navy);
-    padding: 32px;
+  .site-footer {
+    background: var(--navy);
+    padding: 28px 32px;
     text-align: center;
-  }
-  .footer-inner {
-    max-width: 900px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .footer-brand {
     font-size: 13px;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.04em;
   }
-  .footer-brand strong { color: rgba(255,255,255,0.8); }
-  .footer-series {
-    font-size: 12px;
-    color: rgba(255,255,255,0.35);
-  }
+  .site-footer span { color: var(--peach-lt); }
 
   @media (max-width: 640px) {
     .prompt-grid { grid-template-columns: 1fr; }
@@ -635,6 +598,8 @@
     .header-inner { padding: 0 20px; }
     .nav-inner { padding: 0 20px; }
     .gut-check-grid { grid-template-columns: 1fr; }
+    .site-header { padding: 40px 20px 36px; }
+    .intro-strip { padding: 14px 20px; }
   }
 </style>
 </head>
@@ -643,24 +608,17 @@
 <!-- HEADER -->
 <header class="site-header">
   <div class="header-inner">
-    <div class="logo-row">
-      <div class="logo-badge">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
-            <rect x="13" y="3" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
-            <rect x="3" y="13" width="8" height="8" rx="1.5" fill="#1a6fa8"/>
-            <rect x="13" y="13" width="8" height="8" rx="1.5" fill="#3fa0d0"/>
-          </svg>
-        </div>
-        <span class="logo-text">Blueprint</span>
-      </div>
-      <span class="series-tag">AI Learning Series</span>
-    </div>
-    <h1 class="header-title">AI for Task Management</h1>
-    <p class="header-subtitle">Moving from paper lists to AI-powered workflows without losing what made simple systems work</p>
+    <a href="index.html" class="back-link">← Workshop Hub</a>
+    <div class="series-tag">Blueprint AI Workshop Series</div>
+    <h1 class="site-title">AI for Task Management</h1>
+    <p class="site-subtitle">Moving from paper lists to AI-powered workflows without losing what made simple systems work</p>
   </div>
 </header>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <p>Use these prompts and frameworks to put AI to work on your actual task load — not to replace your system, but to make it faster, smarter, and less mentally taxing.</p>
+</div>
 
 <!-- NAV -->
 <nav class="sticky-nav">
@@ -1238,11 +1196,8 @@ Begin by asking me to either:
 
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand"><strong>Blueprint</strong> AI Learning Series</div>
-    <div class="footer-series">AI for Task Management — Internal Handout</div>
-  </div>
+<footer class="site-footer">
+  Blueprint &nbsp;&middot;&nbsp; <span>AI for Task Management</span> &nbsp;&middot;&nbsp; Post-Session Resource
 </footer>
 
 <script>
