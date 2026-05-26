@@ -71,6 +71,10 @@
     }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
+    .back-link { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); text-decoration:none; margin-bottom:18px; transition:color 0.15s; }
+    .back-link:hover { color:rgba(255,255,255,0.85); }
+    .back-link-arrow { margin-right:2px; }
+
     /* REFRAME */
     .reframe-block {
       background: var(--navy); border-radius: var(--radius);
@@ -186,6 +190,7 @@
 
 <header class="site-header">
   <div class="header-inner">
+    <a href="index.html" class="back-link"><span class="back-link-arrow">←</span> Workshop Hub</a>
     <div class="series-tag">Blueprint AI Workshop · How to Prompt · Video 1 of 3</div>
     <h1 class="site-title">The <span>Foundation.</span></h1>
     <p class="site-subtitle">Reframe · Honesty · Anatomy · Iteration</p>
