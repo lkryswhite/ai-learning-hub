@@ -42,16 +42,19 @@
     .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
     .series-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal); margin-bottom: 16px; font-weight: 600; }
     .site-title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(32px, 4.5vw, 52px); font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 10px; letter-spacing: -0.02em; }
-    .site-title span { color: var(--gold-lt); }
+    .site-title span { color: var(--peach); }
     .site-subtitle { font-size: 15px; color: rgba(255,255,255,0.4); font-style: italic; }
 
-    .intro-strip { background: var(--gold-bg); border-bottom: 2px solid var(--gold-lt); padding: 16px 40px; }
+    .intro-strip { background: var(--teal-bg); border-bottom: 2px solid var(--teal-lt); padding: 16px 40px; }
     .intro-strip p { max-width: 960px; margin: 0 auto; font-size: 14px; color: var(--text-mid); }
 
     main { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
 
     .section-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-light); margin-bottom: 22px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .back-link { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); text-decoration:none; margin-bottom:18px; transition:color 0.15s; }
+    .back-link:hover { color:rgba(255,255,255,0.85); }
 
     /* MOVE CARDS */
     .moves-section { margin-bottom: 64px; }
@@ -155,6 +158,7 @@
 
 <header class="site-header">
   <div class="header-inner">
+    <a href="index.html" class="back-link">← Workshop Hub</a>
     <div class="series-tag">Blueprint AI Workshop · How to Prompt · Video 2 of 3</div>
     <h1 class="site-title">Four Moves That Change<br><span>Your Output.</span></h1>
     <p class="site-subtitle">Audience Spec · Show Examples · Ask for Options · Critique Loop</p>
